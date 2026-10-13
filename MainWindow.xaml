@@ -1,0 +1,1803 @@
+<ui:FluentWindow x:Class="EverythingModern.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:vm="clr-namespace:EverythingModern.ViewModels"
+        xmlns:models="clr-namespace:EverythingModern.Models"
+        mc:Ignorable="d"
+        Title="Everyview"
+        Icon="Assets/app.png"
+        Height="860" Width="1360"
+        MinHeight="580" MinWidth="920"
+        WindowStartupLocation="CenterScreen"
+        WindowBackdropType="Mica"
+        ExtendsContentIntoTitleBar="True">
+
+    <ui:FluentWindow.DataContext>
+        <vm:MainViewModel x:Name="ViewModel" />
+    </ui:FluentWindow.DataContext>
+
+    <ui:FluentWindow.Resources>
+        <!-- Modern Dark Theme Column Header Style -->
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Background" Value="#181B22" />
+            <Setter Property="Foreground" Value="#D1D5DB" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#252A36" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Border x:Name="HeaderBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="#222733" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="#1A1E27" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern Filter Pill RadioButton Style with Micro-Animations -->
+        <Style x:Key="FilterPillStyle" TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Padding" Value="13,6" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="#D1D5DB" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="pillBorder"
+                                Background="#1E222B"
+                                BorderBrush="#323846"
+                                BorderThickness="1"
+                                CornerRadius="14"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="pillBorder" Property="Background" Value="#2A303D" />
+                                <Setter TargetName="pillBorder" Property="BorderBrush" Value="#4B5563" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="pillBorder" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="pillBorder" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="pillBorder" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#0284C7" Offset="0" />
+                                            <GradientStop Color="#0078D4" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="pillBorder" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Search Modifier Toggle Button Style with Micro-Animations -->
+        <Style x:Key="ModifierToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#181B22" />
+            <Setter Property="Foreground" Value="#9CA3AF" />
+            <Setter Property="BorderBrush" Value="#2A303D" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="Margin" Value="2,0" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#232834" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0284C7" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Interactive Drive Pill Style with Micro-Animations -->
+        <Style x:Key="DrivePillButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#171A23" />
+            <Setter Property="BorderBrush" Value="#2D3748" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#CBD5E1" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#242B38" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#0284C7" Offset="0" />
+                                            <GradientStop Color="#0078D4" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern Preset Button Style with Micro-Animations -->
+        <Style x:Key="PresetButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#181B22" />
+            <Setter Property="BorderBrush" Value="#272D3A" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#9CA3AF" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#242934" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#38BDF8" />
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Syntax Helper Chip Style with Micro-Animations -->
+        <Style x:Key="SyntaxChipStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1C212B" />
+            <Setter Property="BorderBrush" Value="#2D3748" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#93C5FD" />
+            <Setter Property="FontFamily" Value="Cascadia Code, Consolas" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Padding" Value="7,3" />
+            <Setter Property="Margin" Value="3,3" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0284C7" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.04" ScaleY="1.04" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern Sort Pill Style with Micro-Animations -->
+        <Style x:Key="SortPillStyle" TargetType="Button">
+            <Setter Property="Background" Value="#181B22" />
+            <Setter Property="BorderBrush" Value="#2A303D" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#CBD5E1" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Padding" Value="7,3" />
+            <Setter Property="Margin" Value="2,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#222834" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.04" ScaleY="1.04" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid Background="#0F1115">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Windows 11 TitleBar with Native Everything Launcher -->
+        <ui:TitleBar Grid.Row="0" Title="Everyview">
+            <ui:TitleBar.Header>
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,16,0">
+                        <Image Source="Assets/app.png" Width="20" Height="20" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <TextBlock Text="Everyview" FontWeight="Bold" FontSize="13" Foreground="#F3F4F6" VerticalAlignment="Center" />
+                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="v1.0" FontSize="10" FontWeight="Bold" Foreground="#38BDF8" />
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Quick Button to launch native Everything app -->
+                    <Button Grid.Column="1"
+                            Command="{Binding OpenNativeEverythingCommand}"
+                            Background="#181B22"
+                            BorderBrush="#29303D"
+                            BorderThickness="1"
+                            Foreground="#9CA3AF"
+                            FontSize="11"
+                            Padding="8,3"
+                            Cursor="Hand"
+                            ToolTip="Open classic Everything native window">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Open20" FontSize="12" Margin="0,0,5,0" Foreground="#38BDF8" />
+                            <TextBlock Text="Open Classic Everything" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </ui:TitleBar.Header>
+        </ui:TitleBar>
+
+        <!-- Top Search Omnibar, Modifiers, Scope, Filter Chips & Smart Analytics -->
+        <Grid Grid.Row="1" Margin="24,6,24,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Omnibar Card with Native Modifiers -->
+            <Border Grid.Row="0"
+                    BorderThickness="1.5"
+                    CornerRadius="10"
+                    Padding="10,6">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="#161820" />
+                        <Setter Property="BorderBrush" Value="#2A303D" />
+                        <Style.Triggers>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter Property="BorderBrush" Value="#38BDF8" />
+                                <Setter Property="Background" Value="#171C26" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Search Icon with Glow -->
+                    <ui:SymbolIcon Grid.Column="0"
+                                   Symbol="Search24"
+                                   FontSize="20"
+                                   Margin="6,0,12,0"
+                                   Foreground="#38BDF8"
+                                   VerticalAlignment="Center" />
+
+                    <!-- Search Box + Watermark Overlay -->
+                    <Grid Grid.Column="1">
+                        <TextBlock Text="Search files, folders, code (e.g. *.png, size:>100mb, dm:today, dupe:name)..."
+                                   FontSize="15"
+                                   FontFamily="Segoe UI Variable Text, Segoe UI"
+                                   Foreground="#6B7280"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"
+                                   Margin="4,0,0,0"
+                                   Visibility="{Binding SearchText, Converter={StaticResource StringEmptyToVis}}" />
+
+                        <TextBox x:Name="SearchBox"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 FontSize="15"
+                                 FontFamily="Segoe UI Variable Text, Segoe UI"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Foreground="#FFFFFF"
+                                 CaretBrush="#38BDF8"
+                                 VerticalContentAlignment="Center"
+                                 Padding="4,6">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding OpenFileCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                    </Grid>
+
+                    <!-- Search Modifiers Pill Group (Match Case, Whole Word, Match Path, Regex) -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0">
+                        <ToggleButton Content="Aa" Style="{StaticResource ModifierToggleStyle}" IsChecked="{Binding MatchCase}" ToolTip="Match Case (Alt+C)" />
+                        <ToggleButton Content="&quot; &quot;" Style="{StaticResource ModifierToggleStyle}" IsChecked="{Binding MatchWholeWord}" ToolTip="Match Whole Word (Alt+W)" />
+                        <ToggleButton Content="📁" Style="{StaticResource ModifierToggleStyle}" IsChecked="{Binding MatchPath}" ToolTip="Match Path (Alt+P)" />
+                        <ToggleButton Content=".*" Style="{StaticResource ModifierToggleStyle}" IsChecked="{Binding Regex}" ToolTip="Regular Expressions (Alt+R)" />
+                        <Button Content="⚡ Syntax" Style="{StaticResource PresetButtonStyle}" Command="{Binding ToggleSyntaxHelperCommand}" ToolTip="Search Syntax Cheatsheet" Margin="4,0,0,0" Padding="8,4" FontSize="11" />
+                    </StackPanel>
+
+                    <!-- Shortcut Hint Badge -->
+                    <Border Grid.Column="3"
+                            Background="#1F242D"
+                            CornerRadius="4"
+                            Padding="6,2"
+                            Margin="4,0"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding SearchText, Converter={StaticResource StringEmptyToVis}}">
+                        <TextBlock Text="Ctrl + F" FontSize="10" Foreground="#6B7280" FontWeight="SemiBold" />
+                    </Border>
+
+                    <!-- Clear Button -->
+                    <ui:Button Grid.Column="4"
+                               Icon="{ui:SymbolIcon Dismiss20}"
+                               Appearance="Transparent"
+                               Padding="6,6"
+                               Margin="2,0"
+                               ToolTip="Clear search (Esc)"
+                               Command="{Binding ClearSearchCommand}"
+                               Visibility="{Binding SearchText, Converter={StaticResource StringNotEmptyToVis}}" />
+
+                    <!-- View Mode Toggle Button -->
+                    <ui:Button Grid.Column="5"
+                               Appearance="Transparent"
+                               Padding="6,6"
+                               Margin="4,0"
+                               ToolTip="Toggle View (Table / Card Grid)"
+                               Command="{Binding ToggleViewModeCommand}">
+                        <ui:SymbolIcon Symbol="AppsListDetail20" FontSize="18" Foreground="#9CA3AF" />
+                    </ui:Button>
+
+                    <!-- Toggle Preview Inspector Button -->
+                    <ui:Button Grid.Column="6"
+                               Icon="{ui:SymbolIcon SidebarSearchLtr20}"
+                               Appearance="Transparent"
+                               Padding="8,6"
+                               Margin="4,0,2,0"
+                               ToolTip="Toggle Quick Preview Panel (Ctrl+P)"
+                               Command="{Binding TogglePreviewPaneCommand}" />
+                </Grid>
+            </Border>
+
+            <!-- Active Searching Glowing Progress Line -->
+            <ProgressBar Grid.Row="0"
+                         IsIndeterminate="{Binding IsSearching}"
+                         Height="2"
+                         Background="Transparent"
+                         Foreground="#38BDF8"
+                         BorderThickness="0"
+                         Margin="8,-2,8,0"
+                         VerticalAlignment="Bottom"
+                         Visibility="{Binding IsSearching, Converter={StaticResource BoolToVis}}" />
+
+            <!-- Floating Syntax Cheatsheet Popover -->
+            <Border Grid.Row="1"
+                    Visibility="{Binding IsSyntaxHelperOpen, Converter={StaticResource BoolToVis}}"
+                    Background="#141822"
+                    BorderBrush="#38BDF8"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="14,10"
+                    Margin="0,6,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                        <Button DockPanel.Dock="Right"
+                                Command="{Binding ToggleSyntaxHelperCommand}"
+                                Background="Transparent" BorderThickness="0" Padding="4,2" Cursor="Hand">
+                            <ui:SymbolIcon Symbol="Dismiss16" Foreground="#9CA3AF" />
+                        </Button>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Lightbulb20" Foreground="#F59E0B" Margin="0,0,6,0" />
+                            <TextBlock Text="Everything Search Syntax Cheatsheet (Click chip to insert)" FontWeight="Bold" FontSize="12" Foreground="#F3F4F6" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <!-- Categorized Chips -->
+                    <WrapPanel Grid.Row="1">
+                        <TextBlock Text="Size:" Foreground="#9CA3AF" FontSize="11" Margin="4,6,6,0" FontWeight="SemiBold" />
+                        <Button Content="size:>1gb" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="size:>1gb" />
+                        <Button Content="size:>100mb" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="size:>100mb" />
+                        <Button Content="size:&lt;1mb" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="size:&lt;1mb" />
+                        <Button Content="size:empty" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="size:empty" />
+
+                        <TextBlock Text="Date:" Foreground="#9CA3AF" FontSize="11" Margin="10,6,6,0" FontWeight="SemiBold" />
+                        <Button Content="dm:today" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="dm:today" />
+                        <Button Content="dm:yesterday" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="dm:yesterday" />
+                        <Button Content="dm:thisweek" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="dm:thisweek" />
+                        <Button Content="dm:thismonth" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="dm:thismonth" />
+
+                        <TextBlock Text="Scope:" Foreground="#9CA3AF" FontSize="11" Margin="10,6,6,0" FontWeight="SemiBold" />
+                        <Button Content="folder:" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="folder:" />
+                        <Button Content="file:" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="file:" />
+                        <Button Content="dupe:name" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="dupe:name" />
+                        <Button Content="dupe:size" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="dupe:size" />
+                        <Button Content="empty:" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="empty:" />
+
+                        <TextBlock Text="Ext:" Foreground="#9CA3AF" FontSize="11" Margin="10,6,6,0" FontWeight="SemiBold" />
+                        <Button Content="ext:mp4;mkv" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="ext:mp4;mkv" />
+                        <Button Content="ext:zip;7z;rar" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="ext:zip;7z;rar" />
+                        <Button Content="ext:pdf;docx" Style="{StaticResource SyntaxChipStyle}" Command="{Binding InsertSyntaxSnippetCommand}" CommandParameter="ext:pdf;docx" />
+                    </WrapPanel>
+                </Grid>
+            </Border>
+
+            <!-- Interactive Drive Scope Bar -->
+            <DockPanel Grid.Row="2" Margin="0,10,0,0">
+                <ui:Button DockPanel.Dock="Right"
+                           Command="{Binding OpenSelectedDriveInExplorerCommand}"
+                           Appearance="Transparent"
+                           Padding="8,5"
+                           Cursor="Hand"
+                           ToolTip="Open selected drive in Windows File Explorer">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="FolderOpen20" FontSize="13" Foreground="#94A3B8" Margin="0,0,6,0" />
+                        <TextBlock Text="Open in Explorer" FontSize="11" Foreground="#94A3B8" FontWeight="SemiBold" />
+                    </StackPanel>
+                </ui:Button>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Drive Scope:" FontSize="11" Foreground="#64748B" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" />
+                    <ItemsControl ItemsSource="{Binding DriveItems}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource DrivePillButtonStyle}"
+                                        Command="{Binding DataContext.SelectDriveCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                        CommandParameter="{Binding DriveLetter}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="{Binding IconSymbol}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding DriveLetter}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
+
+                                        <!-- Physical Drive Capacity Meter -->
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                                    Visibility="{Binding IsAllDrives, Converter={StaticResource InverseBoolToVis}}">
+                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding UsedPercent}"
+                                                         Width="32" Height="4" Margin="7,0,4,0"
+                                                         VerticalAlignment="Center"
+                                                         Background="#1E293B" BorderThickness="0"
+                                                         Foreground="#38BDF8" />
+                                            <TextBlock Text="{Binding UsedPercent, StringFormat='{}{0}%'}" FontSize="9" FontWeight="Bold" Foreground="#94A3B8" VerticalAlignment="Center" Margin="2,0,0,0" />
+                                        </StackPanel>
+
+                                        <!-- Entire PC Free Space Badge -->
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="5,1" Margin="6,0,0,0" VerticalAlignment="Center"
+                                                Visibility="{Binding IsAllDrives, Converter={StaticResource BoolToVis}}">
+                                            <TextBlock Text="{Binding FreeSpaceDisplay}" FontSize="10" Foreground="#94A3B8" />
+                                        </Border>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Filter Chips Row + Scale Limit & Export Tools -->
+            <Grid Grid.Row="3" Margin="0,8,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Filter Category Pills -->
+                <ScrollViewer Grid.Column="0"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="⚡ All" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterAll, Mode=TwoWay}" ToolTip="Show all files and folders" />
+                        <RadioButton Content="📄 Files" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterFiles, Mode=TwoWay}" ToolTip="Filter only files" />
+                        <RadioButton Content="📁 Folders" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterFolders, Mode=TwoWay}" ToolTip="Filter only directories" />
+                        <RadioButton Content="📝 Documents" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterDocuments, Mode=TwoWay}" ToolTip="Office, PDFs, Text files" />
+                        <RadioButton Content="🖼️ Pictures" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterPictures, Mode=TwoWay}" ToolTip="Images &amp; Photos" />
+                        <RadioButton Content="🎬 Videos" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterVideos, Mode=TwoWay}" ToolTip="Movies &amp; Clips" />
+                        <RadioButton Content="🎵 Audio" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterAudio, Mode=TwoWay}" ToolTip="Music &amp; Soundtracks" />
+                        <RadioButton Content="💻 Code" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterCode, Mode=TwoWay}" ToolTip="Source code files &amp; scripts" />
+                        <RadioButton Content="📦 Archives" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterArchives, Mode=TwoWay}" ToolTip="Zip, 7z, Rar, Tar" />
+                        <RadioButton Content="⚙️ Apps" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterApps, Mode=TwoWay}" ToolTip="Executables &amp; Installers" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Right Side: Quick Sort Bar + Scale Limit & Export -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Quick Sort Bar -->
+                    <Border Background="#161A22" BorderBrush="#252D3D" BorderThickness="1" CornerRadius="8" Padding="4,2" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Sort:" FontSize="10" FontWeight="Bold" Foreground="#64748B" Margin="4,0,6,0" VerticalAlignment="Center" />
+                            <Button Style="{StaticResource SortPillStyle}" Command="{Binding SortByCommand}" CommandParameter="Name" ToolTip="Sort by Name (A-Z / Z-A)">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Name" FontWeight="SemiBold" FontSize="11" />
+                                    <TextBlock Text="{Binding SortNameIndicator}" Foreground="#38BDF8" FontWeight="Bold" Margin="3,0,0,0" FontSize="10" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource SortPillStyle}" Command="{Binding SortByCommand}" CommandParameter="Size" ToolTip="Sort by Size">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Size" FontWeight="SemiBold" FontSize="11" />
+                                    <TextBlock Text="{Binding SortSizeIndicator}" Foreground="#38BDF8" FontWeight="Bold" Margin="3,0,0,0" FontSize="10" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource SortPillStyle}" Command="{Binding SortByCommand}" CommandParameter="DateModified" ToolTip="Sort by Date Modified">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Date" FontWeight="SemiBold" FontSize="11" />
+                                    <TextBlock Text="{Binding SortDateModifiedIndicator}" Foreground="#38BDF8" FontWeight="Bold" Margin="3,0,0,0" FontSize="10" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource SortPillStyle}" Command="{Binding SortByCommand}" CommandParameter="Path" ToolTip="Sort by Folder Path">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Path" FontWeight="SemiBold" FontSize="11" />
+                                    <TextBlock Text="{Binding SortPathIndicator}" Foreground="#38BDF8" FontWeight="Bold" Margin="3,0,0,0" FontSize="10" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <!-- Max Results Limit Button with Menu -->
+                    <ui:Button Background="#181B22" BorderBrush="#2D3748" BorderThickness="1" Foreground="#9CA3AF" FontSize="11" Padding="8,4" CornerRadius="8" Margin="0,0,8,0" Cursor="Hand" ToolTip="Results Scale Limit">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="NumberSymbol20" FontSize="12" Foreground="#38BDF8" Margin="0,0,4,0" />
+                            <TextBlock Text="{Binding MaxResultsLabel}" FontWeight="SemiBold" Foreground="#F3F4F6" />
+                        </StackPanel>
+                        <ui:Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="5,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="5000" />
+                                <MenuItem Header="25,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="25000" />
+                                <MenuItem Header="50,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="50000" />
+                                <MenuItem Header="100,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="100000" />
+                            </ContextMenu>
+                        </ui:Button.ContextMenu>
+                    </ui:Button>
+
+                    <!-- Export Results Button with Menu -->
+                    <ui:Button Background="#181B22" BorderBrush="#2D3748" BorderThickness="1" Foreground="#9CA3AF" FontSize="11" Padding="8,4" CornerRadius="8" Cursor="Hand" ToolTip="Export Current Results">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="ArrowDownload20" FontSize="12" Foreground="#10B981" Margin="0,0,4,0" />
+                            <TextBlock Text="Export" FontWeight="SemiBold" Foreground="#F3F4F6" />
+                        </StackPanel>
+                        <ui:Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Export to CSV (Excel / Data)" Command="{Binding ExportResultsCommand}" CommandParameter="csv">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="DocumentTable20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Export to JSON" Command="{Binding ExportResultsCommand}" CommandParameter="json">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Code20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Export to Plain Text List" Command="{Binding ExportResultsCommand}" CommandParameter="txt">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Document20" /></MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </ui:Button.ContextMenu>
+                    </ui:Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Smart Presets & Live Disk Analytics Strip -->
+            <Grid Grid.Row="4" Margin="0,8,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Row: Preset chips + Analytics Toggle -->
+                <DockPanel Grid.Row="0">
+                    <ui:Button DockPanel.Dock="Right"
+                               Command="{Binding ToggleAnalyticsCommand}"
+                               Background="#181B22" BorderBrush="#272D3A" BorderThickness="1"
+                               Padding="8,3" CornerRadius="8" Cursor="Hand" ToolTip="Toggle Live Disk Analytics">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="DataPie20" FontSize="12" Foreground="#38BDF8" Margin="0,0,4,0" />
+                            <TextBlock Text="Analytics" FontSize="11" Foreground="#9CA3AF" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </ui:Button>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Smart Presets:" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" />
+                        <Button Content="🔥 Large (>100MB)" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="size:>100mb" />
+                        <Button Content="🕒 Modified Today" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="dm:today" />
+                        <Button Content="📥 Downloads" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="&quot;downloads\&quot;" />
+                        <Button Content="💻 Git Repos" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="&quot;.git&quot; folder:" />
+                        <Button Content="🎬 Big Media (>1GB)" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="ext:mp4;mkv;mov size:>1gb" />
+                    </StackPanel>
+                </DockPanel>
+
+                <!-- Live Disk Analytics Strip -->
+                <Border Grid.Row="1"
+                        Visibility="{Binding IsAnalyticsVisible, Converter={StaticResource BoolToVis}}"
+                        Background="#131720"
+                        BorderBrush="#222A38"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12,6"
+                        Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Selected Drive Metrics Badge -->
+                            <Border Background="#1A2234" BorderBrush="#2D3B55" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="HardDrive20" FontSize="12" Foreground="#38BDF8" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding SelectedDriveMetricsDisplay}" FontSize="11" Foreground="#F1F5F9" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Breakdown Pill -->
+                            <Border Background="#161F2E" BorderBrush="#23354E" BorderThickness="1" CornerRadius="5" Padding="6,2" Margin="0,0,6,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="DocumentMultiple20" FontSize="12" Foreground="#38BDF8" Margin="0,0,4,0" />
+                                    <TextBlock Text="{Binding FileFolderBreakdownDisplay}" FontWeight="SemiBold" FontSize="11" Foreground="#F3F4F6" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Total Size Pill with glowing green badge -->
+                            <Border Background="#0D281E" BorderBrush="#10B981" BorderThickness="1" CornerRadius="5" Padding="7,2" Margin="0,0,6,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="DataUsage20" FontSize="12" Foreground="#34D399" Margin="0,0,4,0" />
+                                    <TextBlock Text="{Binding TotalResultsSizeDisplay}" FontWeight="Bold" FontSize="11" Foreground="#34D399" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Largest File Badge -->
+                            <Border Background="#1A1E26" CornerRadius="5" Padding="6,2"
+                                    Visibility="{Binding LargestFileDisplay, Converter={StaticResource StringNotEmptyToVis}}">
+                                <TextBlock Text="{Binding LargestFileDisplay}" FontSize="11" Foreground="#9CA3AF" VerticalAlignment="Center" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="#182030" BorderBrush="#253550" BorderThickness="1" CornerRadius="5" Padding="8,2"
+                                    Visibility="{Binding TopExtensionsDisplay, Converter={StaticResource StringNotEmptyToVis}}">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Top:" FontSize="10" FontWeight="Bold" Foreground="#64748B" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding TopExtensionsDisplay}" FontSize="11" FontWeight="SemiBold" Foreground="#60A5FA" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Main Body: High Scale Results Table & Cards + Quick Inspector -->
+        <Grid Grid.Row="2" Margin="24,0,24,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="390" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Virtualized Results Container -->
+            <Border Grid.Column="0"
+                    Background="#13151B"
+                    BorderBrush="#232833"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    ClipToBounds="True">
+                <Grid>
+                    <!-- Indeterminate Search Bar -->
+                    <ProgressBar IsIndeterminate="True"
+                                 Height="2"
+                                 VerticalAlignment="Top"
+                                 Panel.ZIndex="10"
+                                 Foreground="#38BDF8"
+                                 Visibility="{Binding IsSearching, Converter={StaticResource BoolToVis}}" />
+
+                    <!-- View Mode 1: High Scale Virtualized Table (ListView) -->
+                    <ListView x:Name="ResultsListView"
+                              ItemsSource="{Binding Results}"
+                              SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                              SelectionMode="Extended"
+                              SelectionChanged="ResultsListView_SelectionChanged"
+                              VirtualizingStackPanel.IsVirtualizing="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              VirtualizingStackPanel.ScrollUnit="Pixel"
+                              VirtualizingStackPanel.CacheLengthUnit="Page"
+                              VirtualizingStackPanel.CacheLength="2,2"
+                              ScrollViewer.IsDeferredScrollingEnabled="False"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              MouseDoubleClick="ListView_MouseDoubleClick"
+                              KeyDown="ListView_KeyDown"
+                              Visibility="{Binding IsGridView, Converter={StaticResource InverseBoolToVis}}">
+                        <ListView.Resources>
+                            <!-- Rich Multi-Item Context Menu -->
+                            <ContextMenu x:Key="RowContextMenu">
+                                <MenuItem Header="Open" Command="{Binding OpenFileCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Open20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Open Containing Folder" Command="{Binding OpenContainingFolderCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Open With..." Command="{Binding OpenWithCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="AppGeneric20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Open in VS Code" Command="{Binding OpenInVSCodeCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Code20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Open in Terminal" Command="{Binding OpenInTerminalCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="WindowConsole20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Quick Look Preview (Space)" Command="{Binding ToggleQuickLookCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Eye20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Copy Selected Files (Clipboard Drop)" Command="{Binding CopySelectedFilesCommand}" CommandParameter="{Binding SelectedItems, ElementName=ResultsListView}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Copy20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Copy Quoted Paths" Command="{Binding CopySelectedQuotedPathsCommand}" CommandParameter="{Binding SelectedItems, ElementName=ResultsListView}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="DocumentCopy20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Calculate SHA-256 Hash" Command="{Binding CalculateChecksumCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Fingerprint20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Delete to Recycle Bin" Command="{Binding DeleteSelectedFilesCommand}" CommandParameter="{Binding SelectedItems, ElementName=ResultsListView}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Delete20" /></MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Properties" Command="{Binding ShowPropertiesCommand}">
+                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Info20" /></MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </ListView.Resources>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="4,7" />
+                                <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Border x:Name="ItemBorder"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <GridViewRowPresenter />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#1A202D" />
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#17263C" />
+                                                    <Setter TargetName="ItemBorder" Property="BorderBrush" Value="#38BDF8" />
+                                                    <Setter TargetName="ItemBorder" Property="BorderThickness" Value="3,0,0,0" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.View>
+                            <GridView>
+                                <!-- Name Column -->
+                                <GridViewColumn Width="260">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Click="ColumnHeader_Click" Tag="Name">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Name" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding DataContext.SortNameIndicator, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                                           Foreground="#38BDF8" FontWeight="Bold" Margin="4,0,0,0" FontSize="11" />
+                                            </StackPanel>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Image Source="{Binding Icon}"
+                                                       Width="18" Height="18"
+                                                       Margin="0,0,10,0"
+                                                       VerticalAlignment="Center"
+                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontWeight="SemiBold"
+                                                           FontSize="13"
+                                                           Foreground="#F9FAFB"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Path Column -->
+                                <GridViewColumn Width="310">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Click="ColumnHeader_Click" Tag="Path">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Path" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding DataContext.SortPathIndicator, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                                           Foreground="#38BDF8" FontWeight="Bold" Margin="4,0,0,0" FontSize="11" />
+                                            </StackPanel>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                            <TextBlock Text="{Binding Path}"
+                                                 FontSize="12"
+                                                 Foreground="#9CA3AF"
+                                                 TextTrimming="CharacterEllipsis"
+                                                 VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Size Column -->
+                                <GridViewColumn Width="90">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Click="ColumnHeader_Click" Tag="Size">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Size" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding DataContext.SortSizeIndicator, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                                           Foreground="#38BDF8" FontWeight="Bold" Margin="4,0,0,0" FontSize="11" />
+                                            </StackPanel>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                            <TextBlock Text="{Binding SizeDisplay}"
+                                                       FontSize="12"
+                                                       FontFamily="Consolas, Cascadia Code"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#D1D5DB"
+                                                       VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Ext Column -->
+                                <GridViewColumn Width="60">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Content="Ext" />
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                            <Border Background="{Binding BadgeBackground}"
+                                                    BorderBrush="{Binding BadgeBorder}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4"
+                                                    Padding="5,1"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ExtensionBadge}"
+                                                           FontSize="10"
+                                                           Foreground="{Binding BadgeForeground}"
+                                                           FontWeight="Bold" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Date Modified Column -->
+                                <GridViewColumn Width="140">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Click="ColumnHeader_Click" Tag="DateModified">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Date Modified" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding DataContext.SortDateModifiedIndicator, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                                           Foreground="#38BDF8" FontWeight="Bold" Margin="4,0,0,0" FontSize="11" />
+                                            </StackPanel>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                            <TextBlock Text="{Binding DateModifiedDisplay}"
+                                                       FontSize="12"
+                                                       Foreground="#9CA3AF"
+                                                       VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Type Column -->
+                                <GridViewColumn Width="100">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Content="Type" />
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                            <Border Background="#1C212B" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding TypeDisplay}"
+                                                           FontSize="11"
+                                                           Foreground="#93C5FD"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <!-- View Mode 2: Visual Card Grid (ListBox) with Micro-Animations -->
+                    <ListBox ItemsSource="{Binding GridResults}"
+                             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                             SelectionMode="Extended"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="12"
+                             MouseDoubleClick="ListView_MouseDoubleClick"
+                             KeyDown="ListView_KeyDown"
+                             Visibility="{Binding IsGridView, Converter={StaticResource BoolToVis}}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="6" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="CardBorder"
+                                                    Background="#181B22"
+                                                    BorderBrush="#252A36"
+                                                    BorderThickness="1"
+                                                    CornerRadius="10"
+                                                    Width="175" Height="140"
+                                                    Padding="10"
+                                                    RenderTransformOrigin="0.5,0.5">
+                                                <ContentPresenter />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="CardBorder" Property="Background" Value="#1E232E" />
+                                                    <Setter TargetName="CardBorder" Property="BorderBrush" Value="#38BDF8" />
+                                                    <Setter TargetName="CardBorder" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <TranslateTransform Y="-3" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="CardBorder" Property="Background" Value="#1A2536" />
+                                                    <Setter TargetName="CardBorder" Property="BorderBrush" Value="#38BDF8" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:SearchResultItem}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Large Thumbnail/Icon -->
+                                    <Image Grid.Row="0"
+                                           Source="{Binding Icon}"
+                                           Width="44" Height="44"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="HighQuality" />
+
+                                    <!-- File Name -->
+                                    <TextBlock Grid.Row="1"
+                                               Text="{Binding Name}"
+                                               FontWeight="SemiBold"
+                                               FontSize="12"
+                                               Foreground="#F3F4F6"
+                                               TextTrimming="CharacterEllipsis"
+                                               TextAlignment="Center"
+                                               Margin="0,6,0,3" />
+
+                                    <!-- Badge + Size Footer -->
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Border Background="{Binding BadgeBackground}"
+                                                BorderBrush="{Binding BadgeBorder}"
+                                                BorderThickness="1"
+                                                CornerRadius="3"
+                                                Padding="5,1"
+                                                Margin="0,0,6,0">
+                                            <TextBlock Text="{Binding ExtensionBadge}" FontSize="9" FontWeight="Bold" Foreground="{Binding BadgeForeground}" />
+                                        </Border>
+                                        <TextBlock Text="{Binding SizeDisplay}" FontSize="10" Foreground="#9CA3AF" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Empty State / Starting State / Offline State Placeholder -->
+                    <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding HasResults, Converter={StaticResource InverseBoolToVis}}">
+
+                        <!-- State 1: Engine is Starting (Reassuring Live Progress State) -->
+                        <Border Visibility="{Binding IsDaemonStarting, Converter={StaticResource BoolToVis}}"
+                                Background="#141824"
+                                BorderBrush="#38BDF8"
+                                BorderThickness="1.2"
+                                CornerRadius="14"
+                                Padding="32,24"
+                                MaxWidth="480"
+                                HorizontalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="36" Foreground="#38BDF8" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Starting Everything Engine..." FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock Text="Voidtools Everything background service is launching and reading file indexes into memory." 
+                                           FontSize="12" Foreground="#94A3B8" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,14" />
+                                <ProgressBar IsIndeterminate="True" Height="4" Foreground="#38BDF8" Background="#1E293B" BorderThickness="0" Margin="0,0,0,10" />
+                                <TextBlock Text="{Binding DaemonStatusText}" FontSize="12" Foreground="#38BDF8" FontWeight="SemiBold" TextAlignment="Center" Margin="0,0,0,6" />
+                                <TextBlock Text="⚡ Cold starts scan NTFS journals for instant search across all drives" FontSize="11" Foreground="#64748B" TextAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- State 2: Engine is genuinely Offline or Elevation Mismatch (not starting) -->
+                        <StackPanel Visibility="{Binding IsDaemonConnected, Converter={StaticResource InverseBoolToVis}}"
+                                    HorizontalAlignment="Center">
+                            <StackPanel Visibility="{Binding IsDaemonStarting, Converter={StaticResource InverseBoolToVis}}"
+                                        HorizontalAlignment="Center">
+
+                                <!-- State 2A: Elevation Mismatch (Everything is running as Admin) -->
+                                <Border Visibility="{Binding IsAdminRequired, Converter={StaticResource BoolToVis}}"
+                                        Background="#181B24"
+                                        BorderBrush="#F59E0B"
+                                        BorderThickness="1.5"
+                                        CornerRadius="14"
+                                        Padding="32,24"
+                                        MaxWidth="540"
+                                        HorizontalAlignment="Center">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                            <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="36" Foreground="#F59E0B" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                            <TextBlock Text="Administrator Rights Required" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                                        </StackPanel>
+
+                                        <TextBlock Text="Voidtools Everything is currently running with Administrator privileges. Windows UIPI prevents non-elevated apps from querying it."
+                                                   FontSize="12" Foreground="#CBD5E1" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,16" LineHeight="18" />
+
+                                        <!-- Action Buttons -->
+                                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                            <!-- Primary: 1-Click Run as Admin -->
+                                            <Button Command="{Binding RelaunchAsAdminCommand}"
+                                                    Background="#D97706"
+                                                    Foreground="White"
+                                                    FontWeight="Bold"
+                                                    FontSize="12"
+                                                    Padding="16,8"
+                                                    BorderThickness="0"
+                                                    Cursor="Hand"
+                                                    Margin="4,4">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="7" />
+                                                    </Style>
+                                                </Button.Resources>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="ShieldKeyhole20" FontSize="14" Foreground="White" Margin="0,0,7,0" />
+                                                    <TextBlock Text="🛡️ Run Everyview as Admin" />
+                                                </StackPanel>
+                                            </Button>
+
+                                            <!-- Open Everything Options -->
+                                            <Button Command="{Binding OpenEverythingOptionsCommand}"
+                                                    Background="#1E293B"
+                                                    Foreground="#38BDF8"
+                                                    BorderBrush="#334155"
+                                                    BorderThickness="1"
+                                                    FontWeight="SemiBold"
+                                                    FontSize="12"
+                                                    Padding="14,8"
+                                                    Cursor="Hand"
+                                                    Margin="4,4">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="7" />
+                                                    </Style>
+                                                </Button.Resources>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Settings20" FontSize="14" Foreground="#38BDF8" Margin="0,0,6,0" />
+                                                    <TextBlock Text="Everything Options" />
+                                                </StackPanel>
+                                            </Button>
+
+                                            <!-- Restart Everything -->
+                                            <Button Command="{Binding RestartEverythingEngineCommand}"
+                                                    Background="#1E293B"
+                                                    Foreground="#94A3B8"
+                                                    BorderBrush="#334155"
+                                                    BorderThickness="1"
+                                                    FontWeight="SemiBold"
+                                                    FontSize="12"
+                                                    Padding="14,8"
+                                                    Cursor="Hand"
+                                                    Margin="4,4">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="7" />
+                                                    </Style>
+                                                </Button.Resources>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="ArrowSync20" FontSize="14" Foreground="#94A3B8" Margin="0,0,6,0" />
+                                                    <TextBlock Text="Restart Engine" />
+                                                </StackPanel>
+                                            </Button>
+                                        </WrapPanel>
+
+                                        <!-- Tip Footer -->
+                                        <Border Background="#12151E" BorderBrush="#232938" BorderThickness="1" CornerRadius="8" Padding="12,8">
+                                            <TextBlock Text="💡 Recommended setup: In Everything Options (Tools > Options > General), check 'Everything Service' and uncheck 'Run as administrator'. This enables instant search for all apps without UAC prompts."
+                                                       FontSize="11" Foreground="#94A3B8" TextAlignment="Center" TextWrapping="Wrap" LineHeight="15" />
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- State 2B: Genuine Offline (Not Admin issue) -->
+                                <StackPanel Visibility="{Binding IsAdminRequired, Converter={StaticResource InverseBoolToVis}}"
+                                            HorizontalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="PlugDisconnected24" FontSize="44" Foreground="#EF4444" Margin="0,0,0,12" />
+                                    <TextBlock Text="Everything Engine is Offline" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#F3F4F6" />
+                                    <TextBlock Text="Everyview requires Voidtools Everything running in the background." 
+                                               FontSize="13" Foreground="#9CA3AF" HorizontalAlignment="Center" Margin="0,6,0,16" />
+                                    
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Command="{Binding ReconnectDaemonCommand}"
+                                                Background="#0284C7"
+                                                Foreground="White"
+                                                FontWeight="SemiBold"
+                                                Padding="18,9"
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                Margin="0,0,10,0">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="7" />
+                                                </Style>
+                                            </Button.Resources>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="ArrowSync20" Margin="0,0,8,0" />
+                                                <TextBlock Text="Connect Everything Engine" />
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button Command="{Binding OpenNativeEverythingCommand}"
+                                                Background="#1E293B"
+                                                Foreground="#38BDF8"
+                                                BorderBrush="#334155"
+                                                BorderThickness="1"
+                                                FontWeight="SemiBold"
+                                                Padding="14,9"
+                                                Cursor="Hand">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="7" />
+                                                </Style>
+                                            </Button.Resources>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Open20" Margin="0,0,6,0" />
+                                                <TextBlock Text="Launch Everything App" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Normal Empty Results (Engine is connected but 0 matches) -->
+                        <StackPanel Visibility="{Binding IsDaemonConnected, Converter={StaticResource BoolToVis}}"
+                                    HorizontalAlignment="Center">
+                            <ui:SymbolIcon Symbol="FolderSearch24" FontSize="48" Foreground="#374151" Margin="0,0,0,12" />
+                            <TextBlock Text="No files found" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#9CA3AF" />
+                            <TextBlock Text="Try adjusting your search terms or filters" FontSize="13" Foreground="#6B7280" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Splitter / Separator -->
+            <GridSplitter Grid.Column="1"
+                          Width="8"
+                          Background="Transparent"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          ResizeBehavior="PreviousAndNext"
+                          Visibility="{Binding IsPreviewPaneVisible, Converter={StaticResource BoolToVis}}" />
+
+            <!-- Inspector / Preview Pane -->
+            <Border Grid.Column="2"
+                    Background="#13151B"
+                    BorderBrush="#232833"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16"
+                    ClipToBounds="True"
+                    Visibility="{Binding IsPreviewPaneVisible, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <!-- When Item Selected -->
+                    <Grid Visibility="{Binding SelectedItem, Converter={StaticResource NullToVis}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- File Hero Section -->
+                        <Border Grid.Row="0"
+                                Background="#181B22"
+                                BorderBrush="#252A36"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0"
+                                       Source="{Binding SelectedItem.Icon}"
+                                       Width="44" Height="44"
+                                       Margin="0,0,12,0"
+                                       VerticalAlignment="Center"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding SelectedItem.Name}"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="#F9FAFB"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding SelectedItem.TypeDisplay}"
+                                               FontSize="11"
+                                               Foreground="#9CA3AF"
+                                               Margin="0,2,0,0" />
+                                </StackPanel>
+
+                                <!-- Quick Copy Name Button -->
+                                <ui:Button Grid.Column="2"
+                                           Icon="{ui:SymbolIcon Copy20}"
+                                           Appearance="Transparent"
+                                           Padding="6,6"
+                                           VerticalAlignment="Center"
+                                           ToolTip="Copy File Name"
+                                           Command="{Binding CopyFileNameCommand}"
+                                           CommandParameter="{Binding SelectedItem}" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Metadata Badges -->
+                        <Border Grid.Row="1"
+                                Background="#181B22"
+                                BorderBrush="#252A36"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,12">
+                            <StackPanel>
+                                <DockPanel Margin="0,2">
+                                    <TextBlock Text="File Size" Foreground="#6B7280" FontSize="11" />
+                                    <TextBlock Text="{Binding SelectedItem.SizeDetailedDisplay}" Foreground="#E5E7EB" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" />
+                                </DockPanel>
+                                <Separator Background="#232833" Margin="0,5" />
+                                <DockPanel Margin="0,2">
+                                    <TextBlock Text="Modified" Foreground="#6B7280" FontSize="11" />
+                                    <TextBlock Text="{Binding SelectedItem.DateModifiedDisplay}" Foreground="#E5E7EB" FontSize="11" HorizontalAlignment="Right" />
+                                </DockPanel>
+                                <DockPanel Margin="0,2">
+                                    <TextBlock Text="Created" Foreground="#6B7280" FontSize="11" />
+                                    <TextBlock Text="{Binding SelectedItem.DateCreatedDisplay}" Foreground="#E5E7EB" FontSize="11" HorizontalAlignment="Right" />
+                                </DockPanel>
+                                <Separator Background="#232833" Margin="0,5" />
+                                <DockPanel Margin="0,2">
+                                    <TextBlock Text="Location" Foreground="#6B7280" FontSize="11" />
+                                    <TextBlock Text="{Binding SelectedItem.Path}" Foreground="#93C5FD" FontSize="11" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right" MaxWidth="220" ToolTip="{Binding SelectedItem.FullPath}" />
+                                </DockPanel>
+                                <Separator Background="#232833" Margin="0,5" />
+                                <!-- Checksum Section -->
+                                <DockPanel Margin="0,2">
+                                    <TextBlock Text="SHA-256" Foreground="#6B7280" FontSize="11" VerticalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding SelectedItem.FileHash}" Foreground="#34D399" FontSize="10" FontFamily="Cascadia Code, Consolas" TextTrimming="CharacterEllipsis" MaxWidth="170" VerticalAlignment="Center"
+                                                   Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringNotEmptyToVis}}" ToolTip="{Binding SelectedItem.FileHash}" />
+                                        <Button Content="Compute" Style="{StaticResource SyntaxChipStyle}" Command="{Binding CalculateChecksumCommand}" CommandParameter="{Binding SelectedItem}"
+                                                Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringEmptyToVis}}" FontSize="10" Padding="6,2" Margin="4,0,0,0" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Live File Preview Section -->
+                        <Border Grid.Row="2"
+                                Background="#181B22"
+                                BorderBrush="#252A36"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="8"
+                                Margin="0,0,0,12"
+                                ClipToBounds="True">
+                            <Grid>
+                                <!-- Image Preview -->
+                                <Image Source="{Binding CurrentPreview.ImageSource}"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       Visibility="{Binding CurrentPreview.ImageSource, Converter={StaticResource NullToVis}}" />
+
+                                <!-- Text / Code Preview -->
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              Visibility="{Binding CurrentPreview.TextContent, Converter={StaticResource StringNotEmptyToVis}}">
+                                    <TextBox Text="{Binding CurrentPreview.TextContent, Mode=OneWay}"
+                                             FontFamily="Cascadia Code, Consolas"
+                                             FontSize="11"
+                                             Foreground="#93C5FD"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             IsReadOnly="True" />
+                                </ScrollViewer>
+
+                                <!-- Placeholder when no preview available -->
+                                <StackPanel VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding CurrentPreview.ImageSource}" Value="{x:Null}" />
+                                                        <Condition Binding="{Binding CurrentPreview.TextContent}" Value="" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <ui:SymbolIcon Symbol="DocumentLandscape24" FontSize="36" Foreground="#374151" Margin="0,0,0,6" />
+                                    <TextBlock Text="Preview unavailable" FontSize="12" Foreground="#6B7280" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Action Toolbar -->
+                        <WrapPanel Grid.Row="3" HorizontalAlignment="Center">
+                            <ui:Button Icon="{ui:SymbolIcon Open20}"
+                                       Appearance="Primary"
+                                       Content="Open"
+                                       Padding="10,5"
+                                       Margin="2"
+                                       Command="{Binding OpenFileCommand}" />
+
+                            <ui:Button Icon="{ui:SymbolIcon FolderOpen20}"
+                                       Appearance="Secondary"
+                                       Content="Folder"
+                                       Padding="10,5"
+                                       Margin="2"
+                                       Command="{Binding OpenContainingFolderCommand}" />
+
+                            <ui:Button Icon="{ui:SymbolIcon Code20}"
+                                       Appearance="Transparent"
+                                       Padding="8,5"
+                                       Margin="2"
+                                       ToolTip="Open in VS Code"
+                                       Command="{Binding OpenInVSCodeCommand}" />
+
+                            <ui:Button Icon="{ui:SymbolIcon WindowConsole20}"
+                                       Appearance="Transparent"
+                                       Padding="8,5"
+                                       Margin="2"
+                                       ToolTip="Open in Terminal"
+                                       Command="{Binding OpenInTerminalCommand}" />
+
+                            <ui:Button Icon="{ui:SymbolIcon Copy20}"
+                                       Appearance="Transparent"
+                                       Padding="8,5"
+                                       Margin="2"
+                                       ToolTip="Copy Full Path"
+                                       Command="{Binding CopyPathCommand}"
+                                       CommandParameter="{Binding SelectedItem}" />
+
+                            <ui:Button Icon="{ui:SymbolIcon Eye20}"
+                                       Appearance="Transparent"
+                                       Padding="8,5"
+                                       Margin="2"
+                                       ToolTip="Quick Look (Space)"
+                                       Command="{Binding ToggleQuickLookCommand}" />
+                        </WrapPanel>
+                    </Grid>
+
+                    <!-- When No Item Selected -->
+                    <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding SelectedItem, Converter={StaticResource InverseNullToVis}}">
+                        <ui:SymbolIcon Symbol="CursorClick24" FontSize="44" Foreground="#2A303D" Margin="0,0,0,10" />
+                        <TextBlock Text="Select a file to inspect" FontSize="14" FontWeight="SemiBold" Foreground="#6B7280" HorizontalAlignment="Center" />
+                        <TextBlock Text="Shows metadata, image viewer, syntax &amp; hashes" FontSize="11" Foreground="#4B5563" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Floating Quick Look Modal Overlay (Spacebar) -->
+            <Border Grid.ColumnSpan="3"
+                    Background="#8A000000"
+                    MouseDown="QuickLookOverlay_MouseDown"
+                    Visibility="{Binding IsQuickLookOpen, Converter={StaticResource BoolToVis}}"
+                    Panel.ZIndex="100">
+                <Border Background="#161820"
+                        BorderBrush="#38BDF8"
+                        BorderThickness="1.5"
+                        CornerRadius="14"
+                        Width="840" Height="580"
+                        Padding="22"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.75" />
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Header -->
+                        <DockPanel Grid.Row="0" Margin="0,0,0,14">
+                            <ui:Button DockPanel.Dock="Right"
+                                       Icon="{ui:SymbolIcon Dismiss20}"
+                                       Appearance="Transparent"
+                                       Command="{Binding CloseQuickLookCommand}" />
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding SelectedItem.Icon}" Width="24" Height="24" Margin="0,0,10,0" />
+                                <TextBlock Text="{Binding SelectedItem.Name}" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <!-- Content Preview -->
+                        <Grid Grid.Row="1">
+                            <!-- Image -->
+                            <Image Source="{Binding CurrentPreview.ImageSource}"
+                                   Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   Visibility="{Binding CurrentPreview.ImageSource, Converter={StaticResource NullToVis}}" />
+
+                            <!-- Code / Text -->
+                            <Border Background="#0C0E12"
+                                    BorderBrush="#232833"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    Padding="10"
+                                    Visibility="{Binding CurrentPreview.TextContent, Converter={StaticResource StringNotEmptyToVis}}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <TextBox Text="{Binding CurrentPreview.TextContent, Mode=OneWay}"
+                                             FontFamily="Cascadia Code, Consolas"
+                                             FontSize="12"
+                                             Foreground="#93C5FD"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             IsReadOnly="True" />
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+
+                        <!-- Footer -->
+                        <DockPanel Grid.Row="2" Margin="0,14,0,0">
+                            <TextBlock Text="{Binding SelectedItem.FullPath}" Foreground="#9CA3AF" FontSize="12" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Grid>
+                </Border>
+            </Border>
+        </Grid>
+
+        <!-- Bottom Modern Status Bar with Selection & Connection Details -->
+        <Border Grid.Row="3"
+                Background="#0A0C0F"
+                BorderBrush="#1A1E26"
+                BorderThickness="0,1,0,0"
+                Padding="20,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Engine Connection & Results Performance (Constrained DockPanel) -->
+                <DockPanel Grid.Column="0" LastChildFill="True" VerticalAlignment="Center">
+                    <!-- Engine Indicator Button -->
+                    <Button DockPanel.Dock="Left"
+                            Command="{Binding ReconnectDaemonCommand}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="0"
+                            Margin="0,0,8,0"
+                            Cursor="Hand"
+                            ToolTip="{Binding DaemonTooltipText}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#10B981" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDaemonConnected}" Value="False">
+                                                <Setter Property="Fill" Value="#EF4444" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsAdminRequired}" Value="True">
+                                                <Setter Property="Fill" Value="#F59E0B" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+
+                            <TextBlock Text="{Binding DaemonStatusText}"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#9CA3AF"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Fix: Run as Administrator Pill (Shown only when elevation mismatch) -->
+                    <Button DockPanel.Dock="Left"
+                            Command="{Binding RelaunchAsAdminCommand}"
+                            Visibility="{Binding IsAdminRequired, Converter={StaticResource BoolToVis}}"
+                            Background="#D97706"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Padding="10,3"
+                            Margin="0,0,10,0"
+                            Cursor="Hand"
+                            ToolTip="Click to restart Everyview with Administrator rights to connect immediately">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6" />
+                            </Style>
+                        </Button.Resources>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldKeyhole20" FontSize="12" Foreground="White" Margin="0,0,5,0" />
+                            <TextBlock Text="🛡️ Fix: Run as Admin" FontSize="11" FontWeight="Bold" />
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Multi-Selection Badge -->
+                    <Border DockPanel.Dock="Left"
+                            Visibility="{Binding HasMultipleSelected, Converter={StaticResource BoolToVis}}"
+                            Background="#1E293B" CornerRadius="4" Padding="8,2" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="CheckboxChecked20" FontSize="13" Foreground="#38BDF8" Margin="0,0,5,0" />
+                            <TextBlock Text="{Binding SelectionSummary}" FontSize="11" FontWeight="Bold" Foreground="#38BDF8" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock DockPanel.Dock="Left" Text=" • " Foreground="#4B5563" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
+
+                    <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Flash20" FontSize="14" Foreground="#38BDF8" Margin="0,0,6,0" VerticalAlignment="Center" />
+
+                    <!-- Status Text - Perfectly constrained by DockPanel, never collides, full details in ToolTip -->
+                    <TextBlock Text="{Binding StatusText}"
+                               ToolTip="{Binding StatusTextTooltip}"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#F3F4F6"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center" />
+                </DockPanel>
+
+                <!-- Right: Keyboard Shortcuts Hint Badges -->
+                <Border Grid.Column="1"
+                        Background="#121620"
+                        BorderBrush="#1E2433"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="10,4"
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="Space: Quick Look • Enter: Open • Shift+Enter: Folder • Ctrl+C: Copy • Ctrl+P: Preview"
+                               FontSize="11"
+                               Foreground="#94A3B8"
+                               VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

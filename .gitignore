@@ -1,0 +1,23 @@
+## .NET / C# / Visual Studio .gitignore
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.idea/
+.vscode/
+*.log
+*.tmp
+*.opendb
+*.db
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
