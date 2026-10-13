@@ -12,6 +12,7 @@ obj/
 *.tmp
 *.opendb
 *.db
+*.zip
 
 # Build results
 [Dd]ebug/
