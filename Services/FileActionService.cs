@@ -252,6 +252,182 @@ namespace EverythingModern.Services
             });
         }
 
+        public static async Task<string> ComputeMd5Async(string fullPath)
+        {
+            if (!File.Exists(fullPath)) return "File not found";
+
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    var fi = new FileInfo(fullPath);
+                    if (fi.Length > 1024 * 1024 * 500)
+                    {
+                        return "File exceeds 500MB (hash skipped)";
+                    }
+
+                    using var md5 = MD5.Create();
+                    using var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    byte[] hashBytes = md5.ComputeHash(stream);
+                    var sb = new StringBuilder();
+                    foreach (byte b in hashBytes)
+                    {
+                        sb.Append(b.ToString("x2"));
+                    }
+                    return sb.ToString();
+                }
+                catch (Exception ex)
+                {
+                    return $"Error: {ex.Message}";
+                }
+            });
+        }
+
+        public static (bool success, string newFullPath, string? error) RenameFileOrFolder(string currentFullPath, string newName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(currentFullPath)) return (false, currentFullPath, "Invalid path");
+                if (string.IsNullOrWhiteSpace(newName)) return (false, currentFullPath, "Name cannot be empty");
+
+                char[] invalidChars = Path.GetInvalidFileNameChars();
+                if (newName.IndexOfAny(invalidChars) >= 0)
+                {
+                    return (false, currentFullPath, "Filename contains invalid characters: \\ / : * ? \" < > |");
+                }
+
+                bool isDir = Directory.Exists(currentFullPath);
+                bool isFile = File.Exists(currentFullPath);
+
+                if (!isDir && !isFile)
+                {
+                    return (false, currentFullPath, "File or folder not found on disk");
+                }
+
+                string? parentDir = Path.GetDirectoryName(currentFullPath);
+                if (string.IsNullOrEmpty(parentDir))
+                {
+                    return (false, currentFullPath, "Cannot rename root directory");
+                }
+
+                string targetPath = Path.Combine(parentDir, newName.Trim());
+                if (string.Equals(currentFullPath, targetPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return (true, currentFullPath, null);
+                }
+
+                if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                {
+                    return (false, currentFullPath, $"An item named '{newName}' already exists in this directory");
+                }
+
+                if (isDir)
+                {
+                    Directory.Move(currentFullPath, targetPath);
+                }
+                else
+                {
+                    File.Move(currentFullPath, targetPath);
+                }
+
+                return (true, targetPath, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, currentFullPath, ex.Message);
+            }
+        }
+
+        public static void CopyDirectoryPath(string fullPath)
+        {
+            try
+            {
+                string? dir = Directory.Exists(fullPath)
+                    ? fullPath
+                    : Path.GetDirectoryName(fullPath);
+
+                if (!string.IsNullOrEmpty(dir))
+                {
+                    Clipboard.SetText(dir);
+                }
+            }
+            catch { }
+        }
+
+        public static void CopyFileAsUrl(string fullPath)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(fullPath))
+                {
+                    var uri = new Uri(fullPath);
+                    Clipboard.SetText(uri.AbsoluteUri);
+                }
+            }
+            catch { }
+        }
+
+        public static void CopyText(string text)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    Clipboard.SetText(text);
+                }
+            }
+            catch { }
+        }
+
+        public static int BatchPermanentDelete(System.Collections.Generic.IEnumerable<string> paths)
+        {
+            try
+            {
+                var existingPaths = new System.Collections.Generic.List<string>();
+                foreach (var p in paths)
+                {
+                    if (File.Exists(p) || Directory.Exists(p))
+                    {
+                        existingPaths.Add(p);
+                    }
+                }
+
+                if (existingPaths.Count == 0) return 0;
+
+                string prompt = existingPaths.Count == 1
+                    ? $"Are you sure you want to PERMANENTLY delete this item?\n\n{Path.GetFileName(existingPaths[0])}\n\nWARNING: This cannot be undone and will NOT go to the Recycle Bin!"
+                    : $"Are you sure you want to PERMANENTLY delete these {existingPaths.Count} items?\n\nWARNING: This cannot be undone and will NOT go to the Recycle Bin!";
+
+                var result = MessageBox.Show(prompt, "Confirm Permanent Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result != MessageBoxResult.Yes) return 0;
+
+                int deletedCount = 0;
+                foreach (var p in existingPaths)
+                {
+                    try
+                    {
+                        if (File.Exists(p))
+                        {
+                            File.Delete(p);
+                            deletedCount++;
+                        }
+                        else if (Directory.Exists(p))
+                        {
+                            Directory.Delete(p, true);
+                            deletedCount++;
+                        }
+                    }
+                    catch { }
+                }
+                return deletedCount;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to permanently delete items: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return 0;
+            }
+        }
+
         public static void ShowProperties(string fullPath)
         {
             try

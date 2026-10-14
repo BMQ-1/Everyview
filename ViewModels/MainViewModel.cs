@@ -41,7 +41,44 @@ namespace EverythingModern.ViewModels
         private bool _isGridView = false; // false = Detailed Table, true = Visual Grid
 
         [ObservableProperty]
+        private bool _isCompactView = false;
+
+        [ObservableProperty]
+        private double _rowMinHeight = 34.0;
+
+        [ObservableProperty]
         private bool _isQuickLookOpen = false;
+
+        // Search History & Bookmarks
+        [ObservableProperty]
+        private ObservableCollection<string> _searchHistory = new();
+
+        [ObservableProperty]
+        private ObservableCollection<SearchBookmark> _bookmarks = new();
+
+        [ObservableProperty]
+        private bool _isHistoryOpen;
+
+        [ObservableProperty]
+        private bool _isBookmarksOpen;
+
+        [ObservableProperty]
+        private bool _isRenameDialogOpen;
+
+        [ObservableProperty]
+        private SearchResultItem? _renameItem;
+
+        [ObservableProperty]
+        private string _newItemName = string.Empty;
+
+        [ObservableProperty]
+        private string? _renameErrorMessage;
+
+        [ObservableProperty]
+        private bool _isAddBookmarkDialogOpen;
+
+        [ObservableProperty]
+        private string _newBookmarkTitle = string.Empty;
 
         // Search Modifiers (Native Everything Flags)
         [ObservableProperty]
@@ -70,10 +107,10 @@ namespace EverythingModern.ViewModels
         private string _selectedDrive = "All Drives";
 
         [ObservableProperty]
-        private int _maxResults = 25000;
+        private int _maxResults = 1000;
 
         [ObservableProperty]
-        private string _maxResultsLabel = "25k";
+        private string _maxResultsLabel = "1k (Instant)";
 
         // Results & Selection
         [ObservableProperty]
@@ -198,6 +235,16 @@ namespace EverythingModern.ViewModels
             get => SelectedFilter == SearchFilterType.Executables;
             set { if (value) SelectedFilter = SearchFilterType.Executables; }
         }
+        public bool IsFilterDuplicates
+        {
+            get => SelectedFilter == SearchFilterType.Duplicates;
+            set { if (value) SelectedFilter = SearchFilterType.Duplicates; }
+        }
+        public bool IsFilterEmptyFolders
+        {
+            get => SelectedFilter == SearchFilterType.EmptyFolders;
+            set { if (value) SelectedFilter = SearchFilterType.EmptyFolders; }
+        }
 
         public void NotifyFilterProperties()
         {
@@ -211,6 +258,8 @@ namespace EverythingModern.ViewModels
             OnPropertyChanged(nameof(IsFilterCode));
             OnPropertyChanged(nameof(IsFilterArchives));
             OnPropertyChanged(nameof(IsFilterApps));
+            OnPropertyChanged(nameof(IsFilterDuplicates));
+            OnPropertyChanged(nameof(IsFilterEmptyFolders));
         }
 
         // Visual Sorting Indicators & Properties
@@ -241,6 +290,43 @@ namespace EverythingModern.ViewModels
 
         public MainViewModel()
         {
+            try
+            {
+                var settings = UserSettingsService.Current;
+                MaxResults = settings.MaxResults;
+                MaxResultsLabel = MaxResults switch
+                {
+                    1000 => "1k (Instant)",
+                    2500 => "2.5k",
+                    5000 => "5k",
+                    10000 => "10k",
+                    25000 => "25k",
+                    50000 => "50k",
+                    _ => MaxResults >= 1000 ? $"{MaxResults / 1000}k" : MaxResults.ToString()
+                };
+                IsAnalyticsVisible = settings.IsAnalyticsVisible;
+                IsPreviewPaneVisible = settings.IsPreviewPaneVisible;
+                IsGridView = settings.IsGridView;
+                IsCompactView = settings.IsCompactView;
+                RowMinHeight = IsCompactView ? 26.0 : 34.0;
+
+                if (!string.IsNullOrEmpty(settings.SelectedDrive))
+                {
+                    SelectedDrive = settings.SelectedDrive;
+                }
+
+                foreach (var h in settings.SearchHistory)
+                {
+                    SearchHistory.Add(h);
+                }
+
+                foreach (var b in settings.Bookmarks)
+                {
+                    Bookmarks.Add(b);
+                }
+            }
+            catch { }
+
             InitializeDrives();
             InitializeDaemonAsync();
         }
@@ -360,6 +446,19 @@ namespace EverythingModern.ViewModels
 
         private async void InitializeDaemonAsync()
         {
+            // Fast path: If Everything is already online and database is loaded, connect instantly (0ms)
+            if (EverythingDaemonManager.IsIpcResponding())
+            {
+                IsDaemonStarting = false;
+                IsDaemonConnected = true;
+                IsAdminRequired = false;
+                DaemonStatusText = "Engine: Ready";
+                DaemonTooltipText = "Voidtools Everything Engine is connected and responding via high-speed IPC.";
+                TriggerSearch(immediate: true);
+                StartDaemonWatchdog();
+                return;
+            }
+
             IsDaemonStarting = true;
             DaemonStatusText = "Connecting to Everything Engine...";
             DaemonTooltipText = "Connecting to Voidtools Everything IPC interface...";
@@ -390,6 +489,7 @@ namespace EverythingModern.ViewModels
                 bool inSession = EverythingDaemonManager.IsEverythingProcessRunningInSession();
                 bool isCurrentAdmin = EverythingDaemonManager.IsCurrentProcessElevated();
                 bool isTargetAdmin = EverythingDaemonManager.IsAnySessionEverythingElevated();
+                bool ipcWindowPresent = EverythingDaemonManager.IsIpcWindowPresent();
 
                 if (inSession && !isCurrentAdmin && isTargetAdmin)
                 {
@@ -397,6 +497,14 @@ namespace EverythingModern.ViewModels
                     DaemonStatusText = "Engine: Elevation Required";
                     StatusText = "Elevation required • Click [🛡️ Run as Admin]";
                     StatusTextTooltip = "Voidtools Everything is running with Administrator rights.\nWindows blocks IPC communication from standard applications.\n\nClick [🛡️ Run as Admin] to elevate Everyview, or configure Everything options.";
+                    DaemonTooltipText = StatusTextTooltip;
+                }
+                else if (inSession && ipcWindowPresent)
+                {
+                    IsAdminRequired = false;
+                    DaemonStatusText = "Engine: Loading Database";
+                    StatusText = "Everything is loading index into memory • Please wait";
+                    StatusTextTooltip = "Everything daemon is active and loading file index. Search will become active momentarily.";
                     DaemonTooltipText = StatusTextTooltip;
                 }
                 else
@@ -532,7 +640,37 @@ namespace EverythingModern.ViewModels
                 TriggerSearch(immediate: true);
             }
         }
-        partial void OnMaxResultsChanged(int value) => TriggerSearch(immediate: true);
+        partial void OnMaxResultsChanged(int value)
+        {
+            UserSettingsService.Current.MaxResults = value;
+            UserSettingsService.SaveDebounced();
+            TriggerSearch(immediate: true);
+        }
+
+        partial void OnIsGridViewChanged(bool value)
+        {
+            UserSettingsService.Current.IsGridView = value;
+            UserSettingsService.SaveDebounced();
+        }
+
+        partial void OnIsPreviewPaneVisibleChanged(bool value)
+        {
+            UserSettingsService.Current.IsPreviewPaneVisible = value;
+            UserSettingsService.SaveDebounced();
+        }
+
+        partial void OnIsAnalyticsVisibleChanged(bool value)
+        {
+            UserSettingsService.Current.IsAnalyticsVisible = value;
+            UserSettingsService.SaveDebounced();
+        }
+
+        partial void OnIsCompactViewChanged(bool value)
+        {
+            RowMinHeight = value ? 26.0 : 34.0;
+            UserSettingsService.Current.IsCompactView = value;
+            UserSettingsService.SaveDebounced();
+        }
 
         partial void OnSelectedItemChanged(SearchResultItem? value)
         {
@@ -574,8 +712,8 @@ namespace EverythingModern.ViewModels
                 {
                     if (!immediate)
                     {
-                        // Ultra-responsive 18ms debounce for typing
-                        await Task.Delay(18, token);
+                        // Ultra-responsive 4ms debounce for typing, just as fast as native Everything
+                        await Task.Delay(4, token);
                         if (token.IsCancellationRequested) return;
                     }
 
@@ -634,6 +772,17 @@ namespace EverythingModern.ViewModels
 
                             StatusText = $"{displayTotal}  •  {TotalResultsSizeDisplay}  •  {batch.ElapsedMilliseconds} ms";
                             StatusTextTooltip = $"Results: {batch.TotalCount:N0} total on {scopeName}\nResponse time: {batch.ElapsedMilliseconds} ms\nFiles: {batch.FileCount:N0}, Folders: {batch.FolderCount:N0}\nTotal Size: {TotalResultsSizeDisplay}";
+
+                            if (!string.IsNullOrWhiteSpace(SearchText) && !IsDriveOnlySearch(SearchText))
+                            {
+                                string q = SearchText.Trim();
+                                UserSettingsService.AddSearchHistory(q);
+                                if (!SearchHistory.Contains(q))
+                                {
+                                    SearchHistory.Insert(0, q);
+                                    if (SearchHistory.Count > 30) SearchHistory.RemoveAt(SearchHistory.Count - 1);
+                                }
+                            }
                         }
                         else
                         {
@@ -967,6 +1116,245 @@ namespace EverythingModern.ViewModels
         }
 
         [RelayCommand]
+        public async Task CalculateMd5Async(SearchResultItem? item)
+        {
+            var target = item ?? SelectedItem;
+            if (target == null) return;
+
+            target.IsCalculatingMd5 = true;
+            target.Md5Hash = "Calculating MD5...";
+            OnPropertyChanged(nameof(SelectedItem));
+
+            string hash = await FileActionService.ComputeMd5Async(target.FullPath);
+            target.Md5Hash = hash;
+            target.IsCalculatingMd5 = false;
+            OnPropertyChanged(nameof(SelectedItem));
+        }
+
+        [RelayCommand]
+        public void CopySha256(SearchResultItem? item)
+        {
+            var target = item ?? SelectedItem;
+            if (target != null && !string.IsNullOrEmpty(target.FileHash) && !target.FileHash.StartsWith("Calculating"))
+            {
+                FileActionService.CopyText(target.FileHash);
+                StatusText = "Copied SHA-256 checksum to clipboard";
+            }
+        }
+
+        [RelayCommand]
+        public void CopyMd5(SearchResultItem? item)
+        {
+            var target = item ?? SelectedItem;
+            if (target != null && !string.IsNullOrEmpty(target.Md5Hash) && !target.Md5Hash.StartsWith("Calculating"))
+            {
+                FileActionService.CopyText(target.Md5Hash);
+                StatusText = "Copied MD5 checksum to clipboard";
+            }
+        }
+
+        [RelayCommand]
+        public void CopyDirectoryPath(SearchResultItem? item)
+        {
+            var target = item ?? SelectedItem;
+            if (target != null)
+            {
+                FileActionService.CopyDirectoryPath(target.FullPath);
+                StatusText = $"Copied directory path to clipboard";
+            }
+        }
+
+        [RelayCommand]
+        public void CopyFileAsUrl(SearchResultItem? item)
+        {
+            var target = item ?? SelectedItem;
+            if (target != null)
+            {
+                FileActionService.CopyFileAsUrl(target.FullPath);
+                StatusText = $"Copied file URL (file://) to clipboard";
+            }
+        }
+
+        [RelayCommand]
+        public void DeletePermanently(IList? items)
+        {
+            var list = new List<string>();
+            var itemObjects = new List<SearchResultItem>();
+            if (items != null && items.Count > 0)
+            {
+                foreach (var obj in items)
+                {
+                    if (obj is SearchResultItem item)
+                    {
+                        list.Add(item.FullPath);
+                        itemObjects.Add(item);
+                    }
+                }
+            }
+            else if (SelectedItem != null)
+            {
+                list.Add(SelectedItem.FullPath);
+                itemObjects.Add(SelectedItem);
+            }
+
+            int count = FileActionService.BatchPermanentDelete(list);
+            if (count > 0)
+            {
+                foreach (var itm in itemObjects)
+                {
+                    Results.Remove(itm);
+                    GridResults.Remove(itm);
+                }
+                StatusText = $"Permanently deleted {count} item(s)";
+            }
+        }
+
+        [RelayCommand]
+        public void StartRename(SearchResultItem? item)
+        {
+            var target = item ?? SelectedItem;
+            if (target == null) return;
+
+            RenameItem = target;
+            NewItemName = target.Name;
+            RenameErrorMessage = null;
+            IsRenameDialogOpen = true;
+        }
+
+        [RelayCommand]
+        public void ConfirmRename()
+        {
+            if (RenameItem == null || string.IsNullOrWhiteSpace(NewItemName))
+            {
+                IsRenameDialogOpen = false;
+                return;
+            }
+
+            var (success, newFullPath, error) = FileActionService.RenameFileOrFolder(RenameItem.FullPath, NewItemName);
+            if (success)
+            {
+                string oldName = RenameItem.Name;
+                RenameItem.Name = Path.GetFileName(newFullPath);
+                RenameItem.FullPath = newFullPath;
+                RenameItem.Path = Path.GetDirectoryName(newFullPath) ?? string.Empty;
+                RenameItem.Extension = Path.GetExtension(newFullPath);
+
+                StatusText = $"Renamed '{oldName}' to '{RenameItem.Name}'";
+                IsRenameDialogOpen = false;
+                RenameItem = null;
+            }
+            else
+            {
+                RenameErrorMessage = error ?? "Failed to rename item";
+            }
+        }
+
+        [RelayCommand]
+        public void CancelRename()
+        {
+            IsRenameDialogOpen = false;
+            RenameItem = null;
+            RenameErrorMessage = null;
+        }
+
+        [RelayCommand]
+        public void ToggleRowDensity()
+        {
+            IsCompactView = !IsCompactView;
+        }
+
+        [RelayCommand]
+        public void ToggleHistory()
+        {
+            IsHistoryOpen = !IsHistoryOpen;
+            if (IsHistoryOpen) IsBookmarksOpen = false;
+        }
+
+        [RelayCommand]
+        public void ApplyHistory(string query)
+        {
+            if (!string.IsNullOrEmpty(query))
+            {
+                SearchText = query;
+            }
+            IsHistoryOpen = false;
+        }
+
+        [RelayCommand]
+        public void ClearHistory()
+        {
+            UserSettingsService.ClearSearchHistory();
+            SearchHistory.Clear();
+            IsHistoryOpen = false;
+            StatusText = "Search history cleared";
+        }
+
+        [RelayCommand]
+        public void ToggleBookmarks()
+        {
+            IsBookmarksOpen = !IsBookmarksOpen;
+            if (IsBookmarksOpen) IsHistoryOpen = false;
+        }
+
+        [RelayCommand]
+        public void ApplyBookmark(SearchBookmark bookmark)
+        {
+            if (bookmark != null && !string.IsNullOrEmpty(bookmark.Query))
+            {
+                SearchText = bookmark.Query;
+            }
+            IsBookmarksOpen = false;
+        }
+
+        [RelayCommand]
+        public void OpenAddBookmarkDialog()
+        {
+            NewBookmarkTitle = string.IsNullOrWhiteSpace(SearchText) ? "My Saved Search" : SearchText.Trim();
+            IsAddBookmarkDialogOpen = true;
+            IsBookmarksOpen = false;
+        }
+
+        [RelayCommand]
+        public void ConfirmAddBookmark()
+        {
+            if (!string.IsNullOrWhiteSpace(NewBookmarkTitle) && !string.IsNullOrWhiteSpace(SearchText))
+            {
+                var bm = new SearchBookmark(NewBookmarkTitle.Trim(), SearchText.Trim(), "Custom saved search", "User", "Star20");
+                UserSettingsService.AddBookmark(bm);
+                Bookmarks.Insert(0, bm);
+                StatusText = $"Saved bookmark '{bm.Title}'";
+            }
+            IsAddBookmarkDialogOpen = false;
+        }
+
+        [RelayCommand]
+        public void CancelAddBookmark()
+        {
+            IsAddBookmarkDialogOpen = false;
+        }
+
+        [RelayCommand]
+        public void RemoveBookmark(SearchBookmark bookmark)
+        {
+            if (bookmark == null) return;
+            UserSettingsService.RemoveBookmark(bookmark.Title);
+            Bookmarks.Remove(bookmark);
+            StatusText = $"Removed bookmark '{bookmark.Title}'";
+        }
+
+        [RelayCommand]
+        public void FindDuplicates()
+        {
+            SelectedFilter = SearchFilterType.Duplicates;
+        }
+
+        [RelayCommand]
+        public void FindEmptyFolders()
+        {
+            SelectedFilter = SearchFilterType.EmptyFolders;
+        }
+
+        [RelayCommand]
         public void TogglePreviewPane()
         {
             IsPreviewPaneVisible = !IsPreviewPaneVisible;
@@ -1029,7 +1417,16 @@ namespace EverythingModern.ViewModels
             if (int.TryParse(limit, out int val))
             {
                 MaxResults = val;
-                MaxResultsLabel = val >= 1000 ? $"{val / 1000}k" : val.ToString();
+                MaxResultsLabel = val switch
+                {
+                    1000 => "1k (Instant)",
+                    2500 => "2.5k",
+                    5000 => "5k",
+                    10000 => "10k",
+                    25000 => "25k",
+                    50000 => "50k",
+                    _ => val >= 1000 ? $"{val / 1000}k" : val.ToString()
+                };
             }
         }
 
@@ -1177,6 +1574,7 @@ namespace EverythingModern.ViewModels
                 bool inSession = EverythingDaemonManager.IsEverythingProcessRunningInSession();
                 bool isCurrentAdmin = EverythingDaemonManager.IsCurrentProcessElevated();
                 bool isTargetAdmin = EverythingDaemonManager.IsAnySessionEverythingElevated();
+                bool ipcWindowPresent = EverythingDaemonManager.IsIpcWindowPresent();
 
                 if (inSession && !isCurrentAdmin && isTargetAdmin)
                 {
@@ -1184,6 +1582,14 @@ namespace EverythingModern.ViewModels
                     DaemonStatusText = "Engine: Elevation Required";
                     StatusText = "Elevation required • Click [🛡️ Run as Admin]";
                     StatusTextTooltip = "Voidtools Everything is running with Administrator rights.\nWindows blocks IPC communication from standard applications.\n\nClick [🛡️ Run as Admin] to elevate Everyview, or configure Everything options.";
+                    DaemonTooltipText = StatusTextTooltip;
+                }
+                else if (inSession && ipcWindowPresent)
+                {
+                    IsAdminRequired = false;
+                    DaemonStatusText = "Engine: Loading Database";
+                    StatusText = "Everything is loading index into memory • Please wait";
+                    StatusTextTooltip = "Everything daemon is active and loading file index. Search will become active momentarily.";
                     DaemonTooltipText = StatusTextTooltip;
                 }
                 else

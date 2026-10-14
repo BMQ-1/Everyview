@@ -29,11 +29,14 @@ namespace EverythingModern
             }
         }
 
+        public event Action? SkipRequested;
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
                 IsForceOpened = true;
+                SkipRequested?.Invoke();
                 FadeOutAndClose();
             }
             base.OnKeyDown(e);
@@ -42,12 +45,14 @@ namespace EverythingModern
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             IsForceOpened = true;
+            SkipRequested?.Invoke();
             FadeOutAndClose();
         }
 
         private void OpenNowButton_Click(object sender, RoutedEventArgs e)
         {
             IsForceOpened = true;
+            SkipRequested?.Invoke();
             FadeOutAndClose();
         }
 

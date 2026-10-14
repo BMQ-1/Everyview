@@ -12,7 +12,7 @@
 [![Engine](https://img.shields.io/badge/Powered%20By-Voidtools%20Everything-FFB900)](https://www.voidtools.com)
 [![Development](https://img.shields.io/badge/Development-Human--Guided%20AI-8A2BE2?logo=sparkles&logoColor=white)](https://github.com)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/Release-v1.0.0-0ea5e9)](https://github.com)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-0ea5e9)](https://github.com)
 
 </div>
 
@@ -67,25 +67,40 @@
 - **Native Windows Explorer FileDrop**: Pressing `Ctrl + C` copies both plain-text paths and native Windows `FileDrop` objects—allowing you to paste files directly into Windows Explorer, VS Code, Discord, Slack, or email clients.
 - **Batch File Operations**: Context menu actions to copy paths, copy quoted paths (`"C:\..."`), delete to Recycle Bin, or inspect properties for all selected items at once.
 
-### 👁️ Quick Look Preview (`Spacebar`) & Details Inspector
-- **Instant Floating Preview**: Press `Spacebar` on any file to open a macOS-style Quick Look modal:
-  - High-resolution image viewer with dimensions and aspect ratio.
-  - Formatted text/code viewer with Cascadia Code monospace font.
-  - Video and media metadata viewer.
-  - Direct actions to open file, reveal in Explorer, or copy path.
-- **Side Details Pane (`Ctrl + P`)**: Detailed file metadata sidebar with SHA-256 cryptographic checksum calculation.
+### 🖱️ Native Drag-and-Drop File Export
+- **Drag Anywhere**: Click and drag any selected file(s) or folder(s) directly out of Everyview into Windows Explorer, Desktop, VS Code, Discord, Slack, Outlook, or browser upload dialogs.
+- **Multi-File Dropping**: Dragging multiple selected items packages all files simultaneously using standard Windows `CF_HDROP` (`DataFormats.FileDrop`).
 
-### 🗂️ Dual View Modes
-- **Detailed Table View**: Clean columns with sorting for `Name`, `Path`, `Size`, `Date Modified`, and `Type`.
-- **Visual Card Grid View**: Modern media-centric card layout with large icons, category badges, and quick-action toolbars.
+### ✏️ In-Place File & Folder Rename (`F2`)
+- **Instant Modal Dialog**: Press `F2` or click Rename to open a sleek Fluent modal overlay with pre-populated name and extension.
+- **Safety Validation**: Validates reserved characters (`\ / : * ? " < > |`) and existing collisions.
+- **Live UI Sync**: Immediately updates the result row, full path, and inspector without requiring a full re-index.
 
-### 🔄 Auto-Managed Background Daemon & Watchdog
-- **Seamless Startup**: Automatically detects and launches `Everything.exe -startup` in silent tray mode if the engine isn't already running.
-- **Live Reconnect Watchdog**: Background timer automatically recovers connection as soon as the Everything engine starts up.
-- **Elevation / UIPI Detection**: Detects User Interface Privilege Isolation mismatches and advises the user if Everything is running with elevated Administrator privileges.
+### 🕒 Search History & ⭐️ Bookmarks
+- **Search History (`Ctrl + H`)**: Automatically records queries with thread-safe persistence in `%LOCALAPPDATA%\Everyview\user_settings.json`. Click any past search chip to re-run instantly, or clear history in 1 click.
+- **Saved Searches & Bookmarks (`Ctrl + B` / `Ctrl + D`)**: Save frequent complex queries (e.g. `ext:png;jpg size:>10mb`, `dupe:name;size`) with custom titles and icons. Run with 1 click from the omnibar or bookmarks popover.
 
-### 💾 Data Export
-- Export search results directly to `CSV`, `JSON`, or formatted `TXT` file lists.
+### 🔍 Duplicate & Empty Folder Finders
+- **Find Duplicates (`dupe:name;size`)**: 1-click preset identifies duplicate files matching both filename and byte-for-byte size.
+- **Find Empty Folders (`empty: folder:`)**: 1-click preset spots zero-byte empty directories to help clean up messy disk volumes.
+
+### 👁️ Supercharged Quick Look (`Spacebar`) & Inspector
+- **Smart Text Sniffing**: Inspects code files, configuration files (`.rs`, `.go`, `.ts`, `.vue`, `.yaml`, `.toml`, `.env`, etc.), and extensionless files (`LICENSE`, `Dockerfile`, `Makefile`) with Cascadia Code monospace font and formatted line numbers (`line | text`).
+- **Audio File Inspector**: Dedicated card for `.mp3`, `.wav`, `.flac`, `.ogg`, `.m4a`, `.aac` with playback prompt.
+- **16-Column Binary Hex Dump**: Formatted binary hex inspector for unparsed binaries with byte offsets, hex values, and ASCII side-column.
+- **Folder Content Breakdown**: Shows subfolder and subfile counts plus total item statistics.
+- **MD5 & SHA-256 Checksums**: Asynchronously compute both MD5 and SHA-256 cryptographic hashes on demand.
+- **Instant File Attributes**: View NTFS attributes (`R`, `H`, `S`, `A`, `C`, `E`) directly from Everything's memory cache with zero disk I/O.
+
+### 🌐 Global Hotkey & System Tray
+- **Global Summon (`Ctrl + Alt + F` / `Alt + Space`)**: Press from anywhere in Windows to bring Everyview to the foreground and focus the search box.
+- **Pure Win32 System Tray**: Minimize to Windows Notification Area with click-to-summon, double-click restore, and native tray menu without heavy WinForms dependencies.
+- **Density Switch**: Toggle between Compact (26px) for 40% more visible results and Comfortable (34px) viewing mode.
+
+### 📋 Clipboard Power Actions
+- **Copy File as URL**: Copies `file:///C:/...` formatted URL for web applications and browser address bars.
+- **Copy Directory Path**: Copies the parent folder path directly.
+- **Permanent Delete (`Shift + Delete`)**: Bypass Recycle Bin with a confirmation safety prompt.
 
 ---
 
@@ -93,13 +108,19 @@
 
 | Shortcut | Action |
 | :--- | :--- |
-| **`Space`** | Open / Close Quick Look Floating Preview |
+| **`Ctrl + Alt + F`** | Global Summon: Bring Everyview to front from anywhere |
+| **`Space`** | Open / Close Quick Look Floating Preview (Text, Audio, Hex, Images) |
+| **`F2`** | In-place Rename selected file or folder |
 | **`Enter`** | Open selected file with default handler |
 | **`Shift + Enter`** / **`Ctrl + Enter`** | Reveal selected item in Windows File Explorer |
 | **`Ctrl + F`** | Focus search omnibar and select text |
+| **`Ctrl + H`** | Open Search History popover |
+| **`Ctrl + B`** | Open Saved Searches & Bookmarks popover |
+| **`Ctrl + D`** | Bookmark current search query |
 | **`Ctrl + C`** | Copy selected files (`FileDrop` for Explorer paste + Text Paths) |
 | **`Ctrl + Shift + C`** | Copy selected files as quoted paths (`"C:\..."`) |
 | **`Delete`** | Safely move selected items to Windows Recycle Bin |
+| **`Shift + Delete`** | Permanently delete selected items (bypass Recycle Bin) |
 | **`Alt + C`** | Toggle Match Case search modifier |
 | **`Alt + W`** | Toggle Match Whole Word search modifier |
 | **`Alt + P`** | Toggle Match Path search modifier |
@@ -108,7 +129,7 @@
 | **`F1`** | Toggle Interactive Syntax Cheatsheet popup |
 | **`Ctrl + P`** | Toggle Details Inspector side panel |
 | **`F5`** | Force refresh current search query |
-| **`Esc`** | Dismiss Quick Look / Syntax Cheatsheet / Clear search |
+| **`Esc`** | Dismiss Modals / Quick Look / History / Bookmarks / Clear search |
 | **`Alt + Enter`** | Open native Windows File Properties dialog |
 
 ---
@@ -155,9 +176,33 @@ The compiled standalone binary is placed in:
 
 ---
 
+## 📦 GitHub Releases (v1.1)
+
+| Asset | Size | Type | SHA-256 Checksum |
+| :--- | :--- | :--- | :--- |
+| **`Everyview-v1.1-Windows-x64.zip`** | ~61 MB | Standalone Portable (Zero Dependencies, Self-Contained) | `CADE37B4A6E893BE1544FBCD3445F0E352DAFAA124F4B632A2C8F9AE4ECD9D07` |
+
+*Contains single-file `Everyview.exe`, `Everything64.dll`, `run.bat`, `README.md`, and `LICENSE`.*
+
+---
+
+## 🔧 Voidtools Everything Engine Architecture & Multi-Instance Handling
+
+Voidtools Everything utilizes a two-tier architecture:
+1. **Everything Service** (`Session 0`, `NT AUTHORITY\SYSTEM`): Runs as a lightweight Windows service to read low-level NTFS USN change journals without requiring user elevation.
+2. **Everything Desktop Client** (`Session 1+`, active user session): Holds the in-memory filename database and hosts the `EVERYTHING_TASKBAR_NOTIFICATION` Win32 message window for ultra-low latency IPC queries.
+
+### Why Everyview v1.1 handles this seamlessly:
+- **Session-Aware Launch Guard (`run.bat`)**: Checks for active Everything processes in the current user session (`SESSION ne 0`) before launching. Never spawns redundant background processes if Everything is already running.
+- **Automatic Duplicate Instance Cleanup (`CleanupDuplicateInstances`)**: If orphan desktop clients exist in the user's session, Everyview automatically terminates the duplicates, preserving the primary process holding the active memory index.
+- **Fast-Path IPC & Parallel Splash Warmup**: Everyview warms up and binds to the Everything engine during the splash screen, verifying `Everything_IsDBLoaded()` so the search interface opens connected with 0 ms query response time.
+
+---
+
 ## 📜 License & Credits
 
 - **Conception & Architectural Direction**: Guided, prompted, and steered by the repository author.
 - **Search Engine**: Powered by the legendary [Voidtools Everything](https://www.voidtools.com) SDK.
 - **UI Framework**: Powered by [WPF-UI](https://github.com/lepoco/wpfui) & Microsoft CommunityToolkit.MVVM.
 - **License**: MIT License. Free for personal and commercial use. Built with ❤️ for Windows power users.
+

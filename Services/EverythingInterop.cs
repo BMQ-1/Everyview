@@ -97,5 +97,20 @@ namespace EverythingModern.Services
 
         [DllImport(EverythingDll)]
         public static extern void Everything_Reset();
+
+        [DllImport(EverythingDll)]
+        public static extern bool Everything_IsDBLoaded();
+
+        [DllImport(EverythingDll)]
+        public static extern bool Everything_IsAdmin();
+
+        [DllImport(EverythingDll)]
+        public static extern uint Everything_GetMajorVersion();
+
+        [DllImport(EverythingDll)]
+        public static extern uint Everything_GetMinorVersion();
+
+        [DllImport(EverythingDll)]
+        public static extern uint Everything_GetBuildNumber();
     }
 }

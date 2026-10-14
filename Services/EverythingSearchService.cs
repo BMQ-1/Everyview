@@ -21,7 +21,9 @@ namespace EverythingModern.Services
         Audio,
         Code,
         Compressed,
-        Executables
+        Executables,
+        Duplicates,
+        EmptyFolders
     }
 
     public enum SortOrder
@@ -114,7 +116,9 @@ namespace EverythingModern.Services
                         EverythingInterop.EVERYTHING_REQUEST_PATH |
                         EverythingInterop.EVERYTHING_REQUEST_EXTENSION |
                         EverythingInterop.EVERYTHING_REQUEST_SIZE |
-                        EverythingInterop.EVERYTHING_REQUEST_DATE_MODIFIED;
+                        EverythingInterop.EVERYTHING_REQUEST_DATE_MODIFIED |
+                        EverythingInterop.EVERYTHING_REQUEST_DATE_CREATED |
+                        EverythingInterop.EVERYTHING_REQUEST_ATTRIBUTES;
 
                     EverythingInterop.Everything_SetRequestFlags(requestFlags);
                     EverythingInterop.Everything_SetMax((uint)Math.Max(100, maxResults));
@@ -131,10 +135,22 @@ namespace EverythingModern.Services
                             {
                                 EverythingDaemonManager.LaunchEverythingClient();
                             }
-                            for (int retry = 0; retry < 5 && !success; retry++)
+                            else if (EverythingDaemonManager.GetUserSessionProcessCount() > 1)
                             {
-                                Thread.Sleep(200);
-                                success = EverythingInterop.Everything_QueryW(true);
+                                EverythingDaemonManager.CleanupDuplicateInstances();
+                            }
+
+                            for (int retry = 0; retry < 6 && !success; retry++)
+                            {
+                                Thread.Sleep(150);
+                                if (EverythingInterop.Everything_IsDBLoaded())
+                                {
+                                    success = EverythingInterop.Everything_QueryW(true);
+                                }
+                                else
+                                {
+                                    success = EverythingInterop.Everything_QueryW(true);
+                                }
                             }
                         }
 
@@ -147,6 +163,7 @@ namespace EverythingModern.Services
                                 bool inSession = EverythingDaemonManager.IsEverythingProcessRunningInSession();
                                 bool isCurrentAdmin = EverythingDaemonManager.IsCurrentProcessElevated();
                                 bool isTargetAdmin = EverythingDaemonManager.IsAnySessionEverythingElevated();
+                                bool ipcWindowPresent = EverythingDaemonManager.IsIpcWindowPresent();
 
                                 if (inSession && !isCurrentAdmin && isTargetAdmin)
                                 {
@@ -154,15 +171,20 @@ namespace EverythingModern.Services
                                     result.ErrorMessage = "Elevation required • Click [🛡️ Run as Admin] to connect";
                                     result.DiagnosticDetails = "Voidtools Everything is running with Administrator rights.\nWindows blocks IPC communication from standard-rights applications.\n\nSolutions:\n• Click [🛡️ Run as Administrator] to elevate Everyview.\n• Or in Everything: Tools > Options > General, check 'Everything Service' and uncheck 'Run as administrator'.";
                                 }
+                                else if (inSession && ipcWindowPresent && !EverythingInterop.Everything_IsDBLoaded())
+                                {
+                                    result.ErrorMessage = "Everything is loading database into memory • Please wait";
+                                    result.DiagnosticDetails = "The Everything process is active and indexing NTFS volumes. Results will appear automatically in moments.";
+                                }
                                 else if (inSession)
                                 {
-                                    result.ErrorMessage = "Everything is busy or loading database • Please wait";
-                                    result.DiagnosticDetails = "The Everything process is active but not answering IPC yet. If Everything was just launched or indexing, it will be ready in moments.";
+                                    result.ErrorMessage = "Everything daemon busy • Initializing database...";
+                                    result.DiagnosticDetails = "The Everything process is active in your session. If Everything was just launched, the database will be loaded momentarily.";
                                 }
                                 else
                                 {
-                                    result.ErrorMessage = "Everything Engine offline • Click to launch";
-                                    result.DiagnosticDetails = "Voidtools Everything is not currently running in your session. Click Reconnect to launch it.";
+                                    result.ErrorMessage = "Everything Engine offline • Click Reconnect to launch";
+                                    result.DiagnosticDetails = "Voidtools Everything client is not currently running in your user session. Click Reconnect to launch it in background.";
                                 }
                             }
                             else if (err == 1)
@@ -221,11 +243,19 @@ namespace EverythingModern.Services
 
                         EverythingInterop.Everything_GetResultSize(i, out long size);
                         EverythingInterop.Everything_GetResultDateModified(i, out long ftMod);
+                        EverythingInterop.Everything_GetResultDateCreated(i, out long ftCreated);
+                        uint attrs = EverythingInterop.Everything_GetResultAttributes(i);
 
                         DateTime? dtModified = null;
                         if (ftMod > 0)
                         {
                             try { dtModified = DateTime.FromFileTime(ftMod); } catch { }
+                        }
+
+                        DateTime? dtCreated = null;
+                        if (ftCreated > 0)
+                        {
+                            try { dtCreated = DateTime.FromFileTime(ftCreated); } catch { }
                         }
 
                         string fullPath = string.IsNullOrEmpty(filePath)
@@ -261,9 +291,9 @@ namespace EverythingModern.Services
                             IsFolder = isFolder,
                             Size = size,
                             DateModified = dtModified,
-                            DateCreated = null,
+                            DateCreated = dtCreated,
                             DateAccessed = null,
-                            Attributes = isFolder ? 0x10u : 0u
+                            Attributes = attrs != 0 ? attrs : (isFolder ? 0x10u : 0u)
                         });
                     }
 
@@ -331,6 +361,8 @@ namespace EverythingModern.Services
                 SearchFilterType.Code => " ext:c;cpp;cs;css;go;h;hpp;html;java;js;json;jsx;kt;lua;md;php;py;rb;rs;sql;swift;ts;tsx;xml;yaml;yml;sh;ps1",
                 SearchFilterType.Compressed => " ext:7z;ace;arj;bz2;cab;gz;gzip;jar;r00;rar;tar;tgz;z;zip;iso",
                 SearchFilterType.Executables => " ext:bat;cmd;exe;msi;msp;scr;ps1;vbs;com",
+                SearchFilterType.Duplicates => " dupe:name;size",
+                SearchFilterType.EmptyFolders => " empty: folder:",
                 _ => string.Empty
             };
 

@@ -1,25 +1,179 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
+using System.Text;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 using EverythingModern.Services;
 
 namespace EverythingModern.Models
 {
-    public class SearchResultItem
+    public class SearchResultItem : ObservableObject
     {
-        public string Name { get; set; } = string.Empty;
-        public string Path { get; set; } = string.Empty;
-        public string FullPath { get; set; } = string.Empty;
-        public string Extension { get; set; } = string.Empty;
-        public long Size { get; set; }
-        public DateTime? DateModified { get; set; }
-        public DateTime? DateCreated { get; set; }
-        public DateTime? DateAccessed { get; set; }
-        public bool IsFolder { get; set; }
-        public uint Attributes { get; set; }
+        private string _name = string.Empty;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (SetProperty(ref _name, value))
+                {
+                    OnPropertyChanged(nameof(ExtensionBadge));
+                    OnPropertyChanged(nameof(TypeDisplay));
+                }
+            }
+        }
 
-        public string? FileHash { get; set; }
-        public bool IsCalculatingHash { get; set; }
+        private string _path = string.Empty;
+        public string Path
+        {
+            get => _path;
+            set => SetProperty(ref _path, value);
+        }
+
+        private string _fullPath = string.Empty;
+        public string FullPath
+        {
+            get => _fullPath;
+            set
+            {
+                if (SetProperty(ref _fullPath, value))
+                {
+                    _icon = null;
+                    OnPropertyChanged(nameof(Icon));
+                }
+            }
+        }
+
+        private string _extension = string.Empty;
+        public string Extension
+        {
+            get => _extension;
+            set
+            {
+                if (SetProperty(ref _extension, value))
+                {
+                    OnPropertyChanged(nameof(TypeDisplay));
+                    OnPropertyChanged(nameof(ExtensionBadge));
+                    OnPropertyChanged(nameof(BadgeBackground));
+                    OnPropertyChanged(nameof(BadgeForeground));
+                    OnPropertyChanged(nameof(BadgeBorder));
+                }
+            }
+        }
+
+        private long _size;
+        public long Size
+        {
+            get => _size;
+            set
+            {
+                if (SetProperty(ref _size, value))
+                {
+                    OnPropertyChanged(nameof(SizeDisplay));
+                    OnPropertyChanged(nameof(SizeDetailedDisplay));
+                }
+            }
+        }
+
+        private DateTime? _dateModified;
+        public DateTime? DateModified
+        {
+            get => _dateModified;
+            set
+            {
+                if (SetProperty(ref _dateModified, value))
+                {
+                    OnPropertyChanged(nameof(DateModifiedDisplay));
+                }
+            }
+        }
+
+        private DateTime? _dateCreated;
+        public DateTime? DateCreated
+        {
+            get => _dateCreated;
+            set
+            {
+                if (SetProperty(ref _dateCreated, value))
+                {
+                    OnPropertyChanged(nameof(DateCreatedDisplay));
+                }
+            }
+        }
+
+        private DateTime? _dateAccessed;
+        public DateTime? DateAccessed
+        {
+            get => _dateAccessed;
+            set
+            {
+                if (SetProperty(ref _dateAccessed, value))
+                {
+                    OnPropertyChanged(nameof(DateAccessedDisplay));
+                }
+            }
+        }
+
+        private bool _isFolder;
+        public bool IsFolder
+        {
+            get => _isFolder;
+            set
+            {
+                if (SetProperty(ref _isFolder, value))
+                {
+                    OnPropertyChanged(nameof(SizeDisplay));
+                    OnPropertyChanged(nameof(SizeDetailedDisplay));
+                    OnPropertyChanged(nameof(TypeDisplay));
+                    OnPropertyChanged(nameof(ExtensionBadge));
+                    OnPropertyChanged(nameof(BadgeBackground));
+                    OnPropertyChanged(nameof(BadgeForeground));
+                    OnPropertyChanged(nameof(BadgeBorder));
+                }
+            }
+        }
+
+        private uint _attributes;
+        public uint Attributes
+        {
+            get => _attributes;
+            set
+            {
+                if (SetProperty(ref _attributes, value))
+                {
+                    OnPropertyChanged(nameof(AttributesDisplay));
+                }
+            }
+        }
+
+        private string? _fileHash;
+        public string? FileHash
+        {
+            get => _fileHash;
+            set => SetProperty(ref _fileHash, value);
+        }
+
+        private bool _isCalculatingHash;
+        public bool IsCalculatingHash
+        {
+            get => _isCalculatingHash;
+            set => SetProperty(ref _isCalculatingHash, value);
+        }
+
+        private string? _md5Hash;
+        public string? Md5Hash
+        {
+            get => _md5Hash;
+            set => SetProperty(ref _md5Hash, value);
+        }
+
+        private bool _isCalculatingMd5;
+        public bool IsCalculatingMd5
+        {
+            get => _isCalculatingMd5;
+            set => SetProperty(ref _isCalculatingMd5, value);
+        }
 
         public string SizeDisplay => IsFolder ? string.Empty : FormatSize(Size);
 
@@ -36,6 +190,24 @@ namespace EverythingModern.Models
         public string DateAccessedDisplay => DateAccessed.HasValue
             ? DateAccessed.Value.ToString("yyyy-MM-dd HH:mm:ss")
             : "Unknown";
+
+        public string AttributesDisplay
+        {
+            get
+            {
+                if (Attributes == 0) return "Normal";
+                var sb = new StringBuilder();
+                if ((Attributes & 0x01) != 0) sb.Append("Read-only ");
+                if ((Attributes & 0x02) != 0) sb.Append("Hidden ");
+                if ((Attributes & 0x04) != 0) sb.Append("System ");
+                if ((Attributes & 0x10) != 0) sb.Append("Directory ");
+                if ((Attributes & 0x20) != 0) sb.Append("Archive ");
+                if ((Attributes & 0x800) != 0) sb.Append("Compressed ");
+                if ((Attributes & 0x4000) != 0) sb.Append("Encrypted ");
+                string res = sb.ToString().Trim();
+                return string.IsNullOrEmpty(res) ? "Normal" : res;
+            }
+        }
 
         public string TypeDisplay
         {
@@ -93,83 +265,50 @@ namespace EverythingModern.Models
         private static readonly SolidColorBrush DefaultFg = FreezeBrush(new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8)));
         private static readonly SolidColorBrush DefaultBorder = FreezeBrush(new SolidColorBrush(Color.FromArgb(0x55, 0x94, 0xA3, 0xB8)));
 
+        private static readonly ConcurrentDictionary<string, (SolidColorBrush Bg, SolidColorBrush Fg, SolidColorBrush Border)> _badgeCache = new(StringComparer.OrdinalIgnoreCase);
+
         private static SolidColorBrush FreezeBrush(SolidColorBrush brush)
         {
             if (brush.CanFreeze) brush.Freeze();
             return brush;
         }
 
-        public SolidColorBrush BadgeBackground
+        private (SolidColorBrush Bg, SolidColorBrush Fg, SolidColorBrush Border) GetBadgeStyles()
         {
-            get
+            if (IsFolder) return (FolderBg, FolderFg, FolderBorder);
+
+            string ext = string.IsNullOrEmpty(Extension) ? string.Empty : Extension.TrimStart('.').ToLowerInvariant();
+            if (string.IsNullOrEmpty(ext)) return (DefaultBg, DefaultFg, DefaultBorder);
+
+            return _badgeCache.GetOrAdd(ext, static e =>
             {
-                if (IsFolder) return FolderBg;
-                string e = Extension.TrimStart('.').ToLowerInvariant();
                 return e switch
                 {
-                    "exe" or "bat" or "cmd" or "msi" or "msp" or "scr" or "ps1" or "vbs" => ExeBg,
-                    "png" or "jpg" or "jpeg" or "gif" or "webp" or "svg" or "ico" or "bmp" or "tif" or "tiff" or "avif" or "heic" or "raw" or "psd" => ImageBg,
-                    "mp4" or "mkv" or "mov" or "avi" or "webm" or "wmv" or "flv" or "m4v" or "ts" or "3gp" => VideoBg,
-                    "mp3" or "wav" or "flac" or "m4a" or "aac" or "ogg" or "wma" or "opus" or "mid" or "midi" => AudioBg,
-                    "zip" or "rar" or "7z" or "tar" or "gz" or "iso" or "bz2" or "cab" or "jar" => ArchiveBg,
-                    "cs" or "js" or "ts" or "jsx" or "tsx" or "py" or "json" or "html" or "css" or "cpp" or "c" or "h" or "hpp" or "sql" or "xml" or "yaml" or "yml" or "sh" or "lua" or "go" or "rs" or "php" or "rb" or "kt" or "swift" or "md" => CodeBg,
-                    "pdf" or "docx" or "doc" or "xlsx" or "xls" or "csv" or "pptx" or "ppt" or "txt" or "rtf" or "epub" => DocBg,
-                    _ => DefaultBg
+                    "exe" or "bat" or "cmd" or "msi" or "msp" or "scr" or "ps1" or "vbs" => (ExeBg, ExeFg, ExeBorder),
+                    "png" or "jpg" or "jpeg" or "gif" or "webp" or "svg" or "ico" or "bmp" or "tif" or "tiff" or "avif" or "heic" or "raw" or "psd" => (ImageBg, ImageFg, ImageBorder),
+                    "mp4" or "mkv" or "mov" or "avi" or "webm" or "wmv" or "flv" or "m4v" or "ts" or "3gp" => (VideoBg, VideoFg, VideoBorder),
+                    "mp3" or "wav" or "flac" or "m4a" or "aac" or "ogg" or "wma" or "opus" or "mid" or "midi" => (AudioBg, AudioFg, AudioBorder),
+                    "zip" or "rar" or "7z" or "tar" or "gz" or "iso" or "bz2" or "cab" or "jar" => (ArchiveBg, ArchiveFg, ArchiveBorder),
+                    "cs" or "js" or "ts" or "jsx" or "tsx" or "py" or "json" or "html" or "css" or "cpp" or "c" or "h" or "hpp" or "sql" or "xml" or "yaml" or "yml" or "sh" or "lua" or "go" or "rs" or "php" or "rb" or "kt" or "swift" or "md" => (CodeBg, CodeFg, CodeBorder),
+                    "pdf" or "docx" or "doc" or "xlsx" or "xls" or "csv" or "pptx" or "ppt" or "txt" or "rtf" or "epub" => (DocBg, DocFg, DocBorder),
+                    _ => (DefaultBg, DefaultFg, DefaultBorder)
                 };
-            }
+            });
         }
 
-        public SolidColorBrush BadgeForeground
-        {
-            get
-            {
-                if (IsFolder) return FolderFg;
-                string e = Extension.TrimStart('.').ToLowerInvariant();
-                return e switch
-                {
-                    "exe" or "bat" or "cmd" or "msi" or "msp" or "scr" or "ps1" or "vbs" => ExeFg,
-                    "png" or "jpg" or "jpeg" or "gif" or "webp" or "svg" or "ico" or "bmp" or "tif" or "tiff" or "avif" or "heic" or "raw" or "psd" => ImageFg,
-                    "mp4" or "mkv" or "mov" or "avi" or "webm" or "wmv" or "flv" or "m4v" or "ts" or "3gp" => VideoFg,
-                    "mp3" or "wav" or "flac" or "m4a" or "aac" or "ogg" or "wma" or "opus" or "mid" or "midi" => AudioFg,
-                    "zip" or "rar" or "7z" or "tar" or "gz" or "iso" or "bz2" or "cab" or "jar" => ArchiveFg,
-                    "cs" or "js" or "ts" or "jsx" or "tsx" or "py" or "json" or "html" or "css" or "cpp" or "c" or "h" or "hpp" or "sql" or "xml" or "yaml" or "yml" or "sh" or "lua" or "go" or "rs" or "php" or "rb" or "kt" or "swift" or "md" => CodeFg,
-                    "pdf" or "docx" or "doc" or "xlsx" or "xls" or "csv" or "pptx" or "ppt" or "txt" or "rtf" or "epub" => DocFg,
-                    _ => DefaultFg
-                };
-            }
-        }
-
-        public SolidColorBrush BadgeBorder
-        {
-            get
-            {
-                if (IsFolder) return FolderBorder;
-                string e = Extension.TrimStart('.').ToLowerInvariant();
-                return e switch
-                {
-                    "exe" or "bat" or "cmd" or "msi" or "msp" or "scr" or "ps1" or "vbs" => ExeBorder,
-                    "png" or "jpg" or "jpeg" or "gif" or "webp" or "svg" or "ico" or "bmp" or "tif" or "tiff" or "avif" or "heic" or "raw" or "psd" => ImageBorder,
-                    "mp4" or "mkv" or "mov" or "avi" or "webm" or "wmv" or "flv" or "m4v" or "ts" or "3gp" => VideoBorder,
-                    "mp3" or "wav" or "flac" or "m4a" or "aac" or "ogg" or "wma" or "opus" or "mid" or "midi" => AudioBorder,
-                    "zip" or "rar" or "7z" or "tar" or "gz" or "iso" or "bz2" or "cab" or "jar" => ArchiveBorder,
-                    "cs" or "js" or "ts" or "jsx" or "tsx" or "py" or "json" or "html" or "css" or "cpp" or "c" or "h" or "hpp" or "sql" or "xml" or "yaml" or "yml" or "sh" or "lua" or "go" or "rs" or "php" or "rb" or "kt" or "swift" or "md" => CodeBorder,
-                    "pdf" or "docx" or "doc" or "xlsx" or "xls" or "csv" or "pptx" or "ppt" or "txt" or "rtf" or "epub" => DocBorder,
-                    _ => DefaultBorder
-                };
-            }
-        }
+        public SolidColorBrush BadgeBackground => GetBadgeStyles().Bg;
+        public SolidColorBrush BadgeForeground => GetBadgeStyles().Fg;
+        public SolidColorBrush BadgeBorder => GetBadgeStyles().Border;
 
         private ImageSource? _icon;
         public ImageSource? Icon
         {
             get
             {
-                if (_icon == null)
-                {
-                    _icon = ShellIconHelper.GetIcon(FullPath, IsFolder, Extension);
-                }
+                _icon ??= ShellIconHelper.GetIcon(FullPath, IsFolder, Extension);
                 return _icon;
             }
+            set => SetProperty(ref _icon, value);
         }
 
         public static string FormatSize(long bytes)

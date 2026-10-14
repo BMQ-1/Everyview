@@ -1,4 +1,5 @@
 <ui:FluentWindow x:Class="EverythingModern.MainWindow"
+        x:Name="RootWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,7 +14,14 @@
         MinHeight="580" MinWidth="920"
         WindowStartupLocation="CenterScreen"
         WindowBackdropType="Mica"
-        ExtendsContentIntoTitleBar="True">
+        ExtendsContentIntoTitleBar="True"
+        FontFamily="Segoe UI Variable Text, Segoe UI"
+        FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        RenderOptions.ClearTypeHint="Enabled"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
 
     <ui:FluentWindow.DataContext>
         <vm:MainViewModel x:Name="ViewModel" />
@@ -22,15 +30,15 @@
     <ui:FluentWindow.Resources>
         <!-- Modern Dark Theme Column Header Style -->
         <Style TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Height" Value="36" />
-            <Setter Property="Background" Value="#181B22" />
-            <Setter Property="Foreground" Value="#D1D5DB" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Background" Value="#151822" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Padding" Value="12,0" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="BorderBrush" Value="#252A36" />
+            <Setter Property="BorderBrush" Value="#222836" />
             <Setter Property="BorderThickness" Value="0,0,1,1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -59,45 +67,35 @@
             </Setter>
         </Style>
 
-        <!-- Modern Filter Pill RadioButton Style with Micro-Animations -->
+        <!-- Modern Filter Pill RadioButton Style (Crisp Subpixel Rendering) -->
         <Style x:Key="FilterPillStyle" TargetType="RadioButton">
-            <Setter Property="Margin" Value="0,0,8,0" />
-            <Setter Property="Padding" Value="13,6" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Padding" Value="11,5" />
+            <Setter Property="FontSize" Value="11.5" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Foreground" Value="#D1D5DB" />
+            <Setter Property="Foreground" Value="#CBD5E1" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
                         <Border x:Name="pillBorder"
-                                Background="#1E222B"
-                                BorderBrush="#323846"
+                                Background="#1A1E27"
+                                BorderBrush="#2A3242"
                                 BorderThickness="1"
-                                CornerRadius="14"
-                                Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
                                               TextElement.Foreground="{TemplateBinding Foreground}" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="pillBorder" Property="Background" Value="#2A303D" />
-                                <Setter TargetName="pillBorder" Property="BorderBrush" Value="#4B5563" />
+                                <Setter TargetName="pillBorder" Property="Background" Value="#252D3D" />
+                                <Setter TargetName="pillBorder" Property="BorderBrush" Value="#38BDF8" />
                                 <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter TargetName="pillBorder" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03" />
-                                    </Setter.Value>
-                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="pillBorder" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter TargetName="pillBorder" Property="Background" Value="#171C26" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="pillBorder" Property="Background">
@@ -117,7 +115,7 @@
             </Setter>
         </Style>
 
-        <!-- Search Modifier Toggle Button Style with Micro-Animations -->
+        <!-- Search Modifier Toggle Button Style (Crisp Subpixel Rendering) -->
         <Style x:Key="ModifierToggleStyle" TargetType="ToggleButton">
             <Setter Property="Background" Value="#181B22" />
             <Setter Property="Foreground" Value="#9CA3AF" />
@@ -136,27 +134,17 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="6"
-                                Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#232834" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6" />
+                                <Setter TargetName="border" Property="Background" Value="#242C3C" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
                                 <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
-                                    </Setter.Value>
-                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter TargetName="border" Property="Background" Value="#161A22" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#0284C7" />
@@ -169,7 +157,7 @@
             </Setter>
         </Style>
 
-        <!-- Interactive Drive Pill Style with Micro-Animations -->
+        <!-- Interactive Drive Pill Style (Crisp Subpixel Rendering) -->
         <Style x:Key="DrivePillButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#171A23" />
             <Setter Property="BorderBrush" Value="#2D3748" />
@@ -188,27 +176,17 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="8"
-                                Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#242B38" />
+                                <Setter TargetName="border" Property="Background" Value="#252D3D" />
                                 <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
                                 <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03" />
-                                    </Setter.Value>
-                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter TargetName="border" Property="Background" Value="#151922" />
                             </Trigger>
                             <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                 <Setter TargetName="border" Property="Background">
@@ -228,7 +206,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern Preset Button Style with Micro-Animations -->
+        <!-- Modern Preset Button Style (Crisp Subpixel Rendering) -->
         <Style x:Key="PresetButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#181B22" />
             <Setter Property="BorderBrush" Value="#272D3A" />
@@ -247,27 +225,17 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="10"
-                                Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#242934" />
+                                <Setter TargetName="border" Property="Background" Value="#252D3D" />
                                 <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
                                 <Setter Property="Foreground" Value="#38BDF8" />
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03" />
-                                    </Setter.Value>
-                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter TargetName="border" Property="Background" Value="#161A22" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -275,7 +243,7 @@
             </Setter>
         </Style>
 
-        <!-- Syntax Helper Chip Style with Micro-Animations -->
+        <!-- Syntax Helper Chip Style (Crisp Subpixel Rendering) -->
         <Style x:Key="SyntaxChipStyle" TargetType="Button">
             <Setter Property="Background" Value="#1C212B" />
             <Setter Property="BorderBrush" Value="#2D3748" />
@@ -294,8 +262,7 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="5"
-                                Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -303,18 +270,9 @@
                                 <Setter TargetName="border" Property="Background" Value="#0284C7" />
                                 <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
                                 <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.04" ScaleY="1.04" />
-                                    </Setter.Value>
-                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter TargetName="border" Property="Background" Value="#0369A1" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -322,7 +280,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern Sort Pill Style with Micro-Animations -->
+        <!-- Modern Sort Pill Style (Crisp Subpixel Rendering) -->
         <Style x:Key="SortPillStyle" TargetType="Button">
             <Setter Property="Background" Value="#181B22" />
             <Setter Property="BorderBrush" Value="#2A303D" />
@@ -340,33 +298,82 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="5"
-                                Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#222834" />
+                                <Setter TargetName="border" Property="Background" Value="#242C3C" />
                                 <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8" />
                                 <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.04" ScaleY="1.04" />
-                                    </Setter.Value>
-                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter TargetName="border" Property="Background" Value="#161B23" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Rich Multi-Item Context Menu for Table & Cards -->
+        <ContextMenu x:Key="RowContextMenu">
+            <MenuItem Header="Open" Command="{Binding DataContext.OpenFileCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Open20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open Containing Folder" Command="{Binding DataContext.OpenContainingFolderCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Rename (F2)" Command="{Binding DataContext.StartRenameCommand, Source={x:Reference RootWindow}}" CommandParameter="{Binding}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Rename20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open With..." Command="{Binding DataContext.OpenWithCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="AppGeneric20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open in VS Code" Command="{Binding DataContext.OpenInVSCodeCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Code20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open in Terminal" Command="{Binding DataContext.OpenInTerminalCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="WindowConsole20" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Quick Look Preview (Space)" Command="{Binding DataContext.ToggleQuickLookCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Eye20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy Selected Files (Clipboard Drop)" Command="{Binding DataContext.CopySelectedFilesCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Copy20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy Full Path" Command="{Binding DataContext.CopyPathCommand, Source={x:Reference RootWindow}}" CommandParameter="{Binding}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="DocumentCopy20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy Quoted Path" Command="{Binding DataContext.CopySelectedQuotedPathsCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="TextQuote20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy Directory Path" Command="{Binding DataContext.CopyDirectoryPathCommand, Source={x:Reference RootWindow}}" CommandParameter="{Binding}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="FolderLink20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy as URL (file://)" Command="{Binding DataContext.CopyFileAsUrlCommand, Source={x:Reference RootWindow}}" CommandParameter="{Binding}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Link20" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Calculate SHA-256 Hash" Command="{Binding DataContext.CalculateChecksumCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Fingerprint20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Calculate MD5 Hash" Command="{Binding DataContext.CalculateMd5Command, Source={x:Reference RootWindow}}" CommandParameter="{Binding}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Key20" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Delete to Recycle Bin (Del)" Command="{Binding DataContext.DeleteSelectedFilesCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Delete20" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Delete Permanently (Shift+Del)" Command="{Binding DataContext.DeletePermanentlyCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="DeleteDismiss20" Foreground="#EF4444" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Properties (Alt+Enter)" Command="{Binding DataContext.ShowPropertiesCommand, Source={x:Reference RootWindow}}">
+                <MenuItem.Icon><ui:SymbolIcon Symbol="Info20" /></MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
     </ui:FluentWindow.Resources>
 
     <Grid Background="#0F1115">
@@ -390,7 +397,7 @@
                         <Image Source="Assets/app.png" Width="20" Height="20" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
                         <TextBlock Text="Everyview" FontWeight="Bold" FontSize="13" Foreground="#F3F4F6" VerticalAlignment="Center" />
                         <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="v1.0" FontSize="10" FontWeight="Bold" Foreground="#38BDF8" />
+                            <TextBlock Text="v1.1" FontSize="10" FontWeight="Bold" Foreground="#38BDF8" />
                         </Border>
                     </StackPanel>
 
@@ -428,7 +435,8 @@
             <Border Grid.Row="0"
                     BorderThickness="1.5"
                     CornerRadius="10"
-                    Padding="10,6">
+                    Padding="10,6"
+                    ClipToBounds="True">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Setter Property="Background" Value="#161820" />
@@ -463,9 +471,9 @@
                     <!-- Search Box + Watermark Overlay -->
                     <Grid Grid.Column="1">
                         <TextBlock Text="Search files, folders, code (e.g. *.png, size:>100mb, dm:today, dupe:name)..."
-                                   FontSize="15"
+                                   FontSize="14.5"
                                    FontFamily="Segoe UI Variable Text, Segoe UI"
-                                   Foreground="#6B7280"
+                                   Foreground="#7B88A1"
                                    VerticalAlignment="Center"
                                    IsHitTestVisible="False"
                                    Margin="4,0,0,0"
@@ -480,6 +488,9 @@
                                  Foreground="#FFFFFF"
                                  CaretBrush="#38BDF8"
                                  VerticalContentAlignment="Center"
+                                 SpellCheck.IsEnabled="False"
+                                 FocusVisualStyle="{x:Null}"
+                                 PreviewKeyDown="SearchBox_PreviewKeyDown"
                                  Padding="4,6">
                             <TextBox.InputBindings>
                                 <KeyBinding Key="Enter" Command="{Binding OpenFileCommand}" />
@@ -496,58 +507,193 @@
                         <Button Content="⚡ Syntax" Style="{StaticResource PresetButtonStyle}" Command="{Binding ToggleSyntaxHelperCommand}" ToolTip="Search Syntax Cheatsheet" Margin="4,0,0,0" Padding="8,4" FontSize="11" />
                     </StackPanel>
 
-                    <!-- Shortcut Hint Badge -->
-                    <Border Grid.Column="3"
-                            Background="#1F242D"
-                            CornerRadius="4"
-                            Padding="6,2"
-                            Margin="4,0"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding SearchText, Converter={StaticResource StringEmptyToVis}}">
-                        <TextBlock Text="Ctrl + F" FontSize="10" Foreground="#6B7280" FontWeight="SemiBold" />
-                    </Border>
+                    <!-- History & Bookmarks Quick Buttons -->
+                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="2,0">
+                        <Button Style="{StaticResource PresetButtonStyle}" Command="{Binding ToggleHistoryCommand}" ToolTip="Recent Searches (Ctrl+H)" Margin="2,0" Padding="8,4">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="History20" FontSize="12" Foreground="#38BDF8" Margin="0,0,4,0" />
+                                <TextBlock Text="History" FontSize="11" Foreground="#CBD5E1" FontWeight="SemiBold" />
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource PresetButtonStyle}" Command="{Binding ToggleBookmarksCommand}" ToolTip="Saved Searches &amp; Bookmarks (Ctrl+B)" Margin="2,0" Padding="8,4">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Bookmark20" FontSize="12" Foreground="#F59E0B" Margin="0,0,4,0" />
+                                <TextBlock Text="Bookmarks" FontSize="11" Foreground="#CBD5E1" FontWeight="SemiBold" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
 
-                    <!-- Clear Button -->
-                    <ui:Button Grid.Column="4"
-                               Icon="{ui:SymbolIcon Dismiss20}"
-                               Appearance="Transparent"
-                               Padding="6,6"
-                               Margin="2,0"
-                               ToolTip="Clear search (Esc)"
-                               Command="{Binding ClearSearchCommand}"
-                               Visibility="{Binding SearchText, Converter={StaticResource StringNotEmptyToVis}}" />
+                    <!-- Action Tools Toolbar (Clear, Density, View Mode, Inspector) -->
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+                        <!-- Clear Button -->
+                        <ui:Button Icon="{ui:SymbolIcon Dismiss20}"
+                                   Appearance="Transparent"
+                                   Padding="6,6"
+                                   Margin="1,0"
+                                   ToolTip="Clear search (Esc)"
+                                   Command="{Binding ClearSearchCommand}"
+                                   Visibility="{Binding SearchText, Converter={StaticResource StringNotEmptyToVis}}" />
 
-                    <!-- View Mode Toggle Button -->
-                    <ui:Button Grid.Column="5"
-                               Appearance="Transparent"
-                               Padding="6,6"
-                               Margin="4,0"
-                               ToolTip="Toggle View (Table / Card Grid)"
-                               Command="{Binding ToggleViewModeCommand}">
-                        <ui:SymbolIcon Symbol="AppsListDetail20" FontSize="18" Foreground="#9CA3AF" />
-                    </ui:Button>
+                        <!-- Row Density Toggle (Comfortable / Compact) -->
+                        <ui:Button Appearance="Transparent"
+                                   Padding="6,6"
+                                   Margin="2,0"
+                                   ToolTip="Toggle Density (Compact 26px / Comfortable 34px)"
+                                   Command="{Binding ToggleRowDensityCommand}">
+                            <ui:SymbolIcon Symbol="TableSplit20" FontSize="17" Foreground="#94A3B8" />
+                        </ui:Button>
 
-                    <!-- Toggle Preview Inspector Button -->
-                    <ui:Button Grid.Column="6"
-                               Icon="{ui:SymbolIcon SidebarSearchLtr20}"
-                               Appearance="Transparent"
-                               Padding="8,6"
-                               Margin="4,0,2,0"
-                               ToolTip="Toggle Quick Preview Panel (Ctrl+P)"
-                               Command="{Binding TogglePreviewPaneCommand}" />
+                        <!-- View Mode Toggle Button -->
+                        <ui:Button Appearance="Transparent"
+                                   Padding="6,6"
+                                   Margin="2,0"
+                                   ToolTip="Toggle View (Table / Card Grid)"
+                                   Command="{Binding ToggleViewModeCommand}">
+                            <ui:SymbolIcon Symbol="AppsListDetail20" FontSize="18" Foreground="#9CA3AF" />
+                        </ui:Button>
+
+                        <!-- Toggle Preview Inspector Button -->
+                        <ui:Button Icon="{ui:SymbolIcon SidebarSearchLtr20}"
+                                   Appearance="Transparent"
+                                   Padding="7,6"
+                                   Margin="2,0,2,0"
+                                   ToolTip="Toggle Quick Preview Panel (Ctrl+P)"
+                                   Command="{Binding TogglePreviewPaneCommand}" />
+                    </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- Active Searching Glowing Progress Line -->
-            <ProgressBar Grid.Row="0"
-                         IsIndeterminate="{Binding IsSearching}"
-                         Height="2"
-                         Background="Transparent"
-                         Foreground="#38BDF8"
-                         BorderThickness="0"
-                         Margin="8,-2,8,0"
-                         VerticalAlignment="Bottom"
-                         Visibility="{Binding IsSearching, Converter={StaticResource BoolToVis}}" />
+            <!-- Floating History Popover -->
+            <Border Grid.Row="1"
+                    Visibility="{Binding IsHistoryOpen, Converter={StaticResource BoolToVis}}"
+                    Background="#141822"
+                    BorderBrush="#38BDF8"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="14,10"
+                    Margin="0,6,0,0"
+                    Panel.ZIndex="50">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" MaxHeight="220" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Content="Clear All"
+                                    Command="{Binding ClearHistoryCommand}"
+                                    Style="{StaticResource SyntaxChipStyle}"
+                                    Margin="0,0,8,0"
+                                    Foreground="#EF4444"
+                                    ToolTip="Clear all search history" />
+                            <Button Command="{Binding ToggleHistoryCommand}"
+                                    Background="Transparent" BorderThickness="0" Padding="4,2" Cursor="Hand">
+                                <ui:SymbolIcon Symbol="Dismiss16" Foreground="#9CA3AF" />
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="History20" Foreground="#38BDF8" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Recent Searches (Click to re-run • Esc to close)" FontWeight="Bold" FontSize="12" Foreground="#F3F4F6" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding SearchHistory}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource SyntaxChipStyle}"
+                                            Command="{Binding DataContext.ApplyHistoryCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                            CommandParameter="{Binding}"
+                                            Margin="0,0,6,6"
+                                            Padding="10,5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon Symbol="Clock16" FontSize="11" Foreground="#94A3B8" Margin="0,0,5,0" />
+                                            <TextBlock Text="{Binding}" FontSize="11.5" Foreground="#E2E8F0" />
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Floating Bookmarks Popover -->
+            <Border Grid.Row="1"
+                    Visibility="{Binding IsBookmarksOpen, Converter={StaticResource BoolToVis}}"
+                    Background="#141822"
+                    BorderBrush="#F59E0B"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="14,10"
+                    Margin="0,6,0,0"
+                    Panel.ZIndex="50">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" MaxHeight="260" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Content="+ Bookmark Current Search"
+                                    Command="{Binding OpenAddBookmarkDialogCommand}"
+                                    Style="{StaticResource SyntaxChipStyle}"
+                                    Margin="0,0,8,0"
+                                    Foreground="#38BDF8"
+                                    ToolTip="Save current query as a custom bookmark" />
+                            <Button Command="{Binding ToggleBookmarksCommand}"
+                                    Background="Transparent" BorderThickness="0" Padding="4,2" Cursor="Hand">
+                                <ui:SymbolIcon Symbol="Dismiss16" Foreground="#9CA3AF" />
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Bookmark20" Foreground="#F59E0B" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Saved Searches &amp; Bookmarks (1-Click Run • Ctrl+B)" FontWeight="Bold" FontSize="12" Foreground="#F3F4F6" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Bookmarks}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#1A2234" BorderBrush="#2D3B55" BorderThickness="1" CornerRadius="6" Margin="0,0,6,6" Padding="4,2">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Style="{StaticResource SyntaxChipStyle}"
+                                                    Background="Transparent" BorderThickness="0"
+                                                    Command="{Binding DataContext.ApplyBookmarkCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip="{Binding Description}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="{Binding IconSymbol}" FontSize="12" Foreground="#F59E0B" Margin="0,0,5,0" />
+                                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="11" Foreground="#F3F4F6" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Command="{Binding DataContext.RemoveBookmarkCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="Transparent" BorderThickness="0" Padding="3,1" Cursor="Hand" ToolTip="Delete Bookmark">
+                                                <ui:SymbolIcon Symbol="Dismiss12" Foreground="#64748B" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
 
             <!-- Floating Syntax Cheatsheet Popover -->
             <Border Grid.Row="1"
@@ -619,45 +765,47 @@
                     </StackPanel>
                 </ui:Button>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Drive Scope:" FontSize="11" Foreground="#64748B" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" />
-                    <ItemsControl ItemsSource="{Binding DriveItems}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource DrivePillButtonStyle}"
-                                        Command="{Binding DataContext.SelectDriveCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
-                                        CommandParameter="{Binding DriveLetter}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <ui:SymbolIcon Symbol="{Binding IconSymbol}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{Binding DriveLetter}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
+                <DockPanel LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Left" Text="Drive Scope:" FontSize="11" Foreground="#64748B" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Focusable="False">
+                        <ItemsControl ItemsSource="{Binding DriveItems}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource DrivePillButtonStyle}"
+                                            Command="{Binding DataContext.SelectDriveCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                                            CommandParameter="{Binding DriveLetter}">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon Symbol="{Binding IconSymbol}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding DriveLetter}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
 
-                                        <!-- Physical Drive Capacity Meter -->
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
-                                                    Visibility="{Binding IsAllDrives, Converter={StaticResource InverseBoolToVis}}">
-                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding UsedPercent}"
-                                                         Width="32" Height="4" Margin="7,0,4,0"
-                                                         VerticalAlignment="Center"
-                                                         Background="#1E293B" BorderThickness="0"
-                                                         Foreground="#38BDF8" />
-                                            <TextBlock Text="{Binding UsedPercent, StringFormat='{}{0}%'}" FontSize="9" FontWeight="Bold" Foreground="#94A3B8" VerticalAlignment="Center" Margin="2,0,0,0" />
+                                            <!-- Physical Drive Capacity Meter -->
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                                        Visibility="{Binding IsAllDrives, Converter={StaticResource InverseBoolToVis}}">
+                                                <ProgressBar Minimum="0" Maximum="100" Value="{Binding UsedPercent}"
+                                                             Width="32" Height="4" Margin="7,0,4,0"
+                                                             VerticalAlignment="Center"
+                                                             Background="#1E293B" BorderThickness="0"
+                                                             Foreground="#38BDF8" />
+                                                <TextBlock Text="{Binding UsedPercent, StringFormat='{}{0}%'}" FontSize="9" FontWeight="Bold" Foreground="#94A3B8" VerticalAlignment="Center" Margin="2,0,0,0" />
+                                            </StackPanel>
+
+                                            <!-- Entire PC Free Space Badge -->
+                                            <Border Background="#1E293B" CornerRadius="4" Padding="5,1" Margin="6,0,0,0" VerticalAlignment="Center"
+                                                    Visibility="{Binding IsAllDrives, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="{Binding FreeSpaceDisplay}" FontSize="10" Foreground="#94A3B8" />
+                                            </Border>
                                         </StackPanel>
-
-                                        <!-- Entire PC Free Space Badge -->
-                                        <Border Background="#1E293B" CornerRadius="4" Padding="5,1" Margin="6,0,0,0" VerticalAlignment="Center"
-                                                Visibility="{Binding IsAllDrives, Converter={StaticResource BoolToVis}}">
-                                            <TextBlock Text="{Binding FreeSpaceDisplay}" FontSize="10" Foreground="#94A3B8" />
-                                        </Border>
-                                    </StackPanel>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
             </DockPanel>
 
             <!-- Filter Chips Row + Scale Limit & Export Tools -->
@@ -669,9 +817,18 @@
 
                 <!-- Filter Category Pills -->
                 <ScrollViewer Grid.Column="0"
-                              HorizontalScrollBarVisibility="Auto"
-                              VerticalScrollBarVisibility="Disabled">
-                    <StackPanel Orientation="Horizontal">
+                              x:Name="FilterScrollViewer"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Disabled"
+                              Focusable="False"
+                              Margin="0,0,12,0"
+                              PreviewMouseWheel="FilterScrollViewer_PreviewMouseWheel">
+                    <ScrollViewer.Template>
+                        <ControlTemplate TargetType="ScrollViewer">
+                            <ScrollContentPresenter />
+                        </ControlTemplate>
+                    </ScrollViewer.Template>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <RadioButton Content="⚡ All" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterAll, Mode=TwoWay}" ToolTip="Show all files and folders" />
                         <RadioButton Content="📄 Files" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterFiles, Mode=TwoWay}" ToolTip="Filter only files" />
                         <RadioButton Content="📁 Folders" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterFolders, Mode=TwoWay}" ToolTip="Filter only directories" />
@@ -682,6 +839,8 @@
                         <RadioButton Content="💻 Code" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterCode, Mode=TwoWay}" ToolTip="Source code files &amp; scripts" />
                         <RadioButton Content="📦 Archives" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterArchives, Mode=TwoWay}" ToolTip="Zip, 7z, Rar, Tar" />
                         <RadioButton Content="⚙️ Apps" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterApps, Mode=TwoWay}" ToolTip="Executables &amp; Installers" />
+                        <RadioButton Content="🔍 Duplicates" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterDuplicates, Mode=TwoWay}" ToolTip="Find duplicate files by name and size" />
+                        <RadioButton Content="🗑️ Empty Folders" Style="{StaticResource FilterPillStyle}" GroupName="CategoryFilters" IsChecked="{Binding IsFilterEmptyFolders, Mode=TwoWay}" ToolTip="Find empty directories" />
                     </StackPanel>
                 </ScrollViewer>
 
@@ -725,10 +884,12 @@
                         </StackPanel>
                         <ui:Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="5,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="5000" />
-                                <MenuItem Header="25,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="25000" />
-                                <MenuItem Header="50,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="50000" />
-                                <MenuItem Header="100,000 items limit" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="100000" />
+                                <MenuItem Header="⚡ 1,000 items (Instant - Fast as Everything)" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="1000" />
+                                <MenuItem Header="2,500 items" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="2500" />
+                                <MenuItem Header="5,000 items" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="5000" />
+                                <MenuItem Header="10,000 items" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="10000" />
+                                <MenuItem Header="25,000 items" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="25000" />
+                                <MenuItem Header="50,000 items" Command="{Binding SetMaxResultsLimitCommand}" CommandParameter="50000" />
                             </ContextMenu>
                         </ui:Button.ContextMenu>
                     </ui:Button>
@@ -775,14 +936,20 @@
                         </StackPanel>
                     </ui:Button>
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Smart Presets:" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" />
-                        <Button Content="🔥 Large (>100MB)" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="size:>100mb" />
-                        <Button Content="🕒 Modified Today" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="dm:today" />
-                        <Button Content="📥 Downloads" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="&quot;downloads\&quot;" />
-                        <Button Content="💻 Git Repos" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="&quot;.git&quot; folder:" />
-                        <Button Content="🎬 Big Media (>1GB)" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="ext:mp4;mkv;mov size:>1gb" />
-                    </StackPanel>
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Focusable="False">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Smart Presets:" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" />
+                            <Button Content="🔍 Duplicates" Style="{StaticResource PresetButtonStyle}" Command="{Binding FindDuplicatesCommand}" ToolTip="Find duplicate files by name and size" />
+                            <Button Content="🗑️ Empty Folders" Style="{StaticResource PresetButtonStyle}" Command="{Binding FindEmptyFoldersCommand}" ToolTip="Find empty directories" />
+                            <Button Content="💥 Gigantic (>1GB)" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="size:>1gb" />
+                            <Button Content="🕒 Past 24h" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="dm:past24hours" />
+                            <Button Content="📅 This Week" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="dm:thisweek" />
+                            <Button Content="⚡ Scripts" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="ext:ps1;bat;cmd;sh;py" />
+                            <Button Content="📄 Docs &amp; PDFs" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="ext:pdf;docx;xlsx;pptx" />
+                            <Button Content="📥 Downloads" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="downloads:" />
+                            <Button Content="💻 Git Repos" Style="{StaticResource PresetButtonStyle}" Command="{Binding ApplyPresetCommand}" CommandParameter="&quot;.git&quot; folder:" />
+                        </StackPanel>
+                    </ScrollViewer>
                 </DockPanel>
 
                 <!-- Live Disk Analytics Strip -->
@@ -879,60 +1046,26 @@
                               VirtualizingStackPanel.IsVirtualizing="True"
                               VirtualizingStackPanel.VirtualizationMode="Recycling"
                               VirtualizingStackPanel.ScrollUnit="Pixel"
-                              VirtualizingStackPanel.CacheLengthUnit="Page"
-                              VirtualizingStackPanel.CacheLength="2,2"
+                              VirtualizingStackPanel.CacheLengthUnit="Item"
+                              VirtualizingStackPanel.CacheLength="30,30"
                               ScrollViewer.IsDeferredScrollingEnabled="False"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                               BorderThickness="0"
                               Background="Transparent"
                               MouseDoubleClick="ListView_MouseDoubleClick"
                               KeyDown="ListView_KeyDown"
+                              PreviewMouseLeftButtonDown="ListBox_PreviewMouseLeftButtonDown"
+                              PreviewMouseMove="ListBox_PreviewMouseMove"
                               Visibility="{Binding IsGridView, Converter={StaticResource InverseBoolToVis}}">
-                        <ListView.Resources>
-                            <!-- Rich Multi-Item Context Menu -->
-                            <ContextMenu x:Key="RowContextMenu">
-                                <MenuItem Header="Open" Command="{Binding OpenFileCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Open20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Open Containing Folder" Command="{Binding OpenContainingFolderCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Open With..." Command="{Binding OpenWithCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="AppGeneric20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Open in VS Code" Command="{Binding OpenInVSCodeCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Code20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Open in Terminal" Command="{Binding OpenInTerminalCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="WindowConsole20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <Separator />
-                                <MenuItem Header="Quick Look Preview (Space)" Command="{Binding ToggleQuickLookCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Eye20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Copy Selected Files (Clipboard Drop)" Command="{Binding CopySelectedFilesCommand}" CommandParameter="{Binding SelectedItems, ElementName=ResultsListView}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Copy20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Copy Quoted Paths" Command="{Binding CopySelectedQuotedPathsCommand}" CommandParameter="{Binding SelectedItems, ElementName=ResultsListView}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="DocumentCopy20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Calculate SHA-256 Hash" Command="{Binding CalculateChecksumCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Fingerprint20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <Separator />
-                                <MenuItem Header="Delete to Recycle Bin" Command="{Binding DeleteSelectedFilesCommand}" CommandParameter="{Binding SelectedItems, ElementName=ResultsListView}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Delete20" /></MenuItem.Icon>
-                                </MenuItem>
-                                <Separator />
-                                <MenuItem Header="Properties" Command="{Binding ShowPropertiesCommand}">
-                                    <MenuItem.Icon><ui:SymbolIcon Symbol="Info20" /></MenuItem.Icon>
-                                </MenuItem>
-                            </ContextMenu>
-                        </ListView.Resources>
 
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                <Setter Property="Padding" Value="4,7" />
+                                <Setter Property="Padding" Value="6,6" />
+                                <Setter Property="MinHeight" Value="{Binding DataContext.RowMinHeight, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}" />
+                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                <Setter Property="UseLayoutRounding" Value="True" />
                                 <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
                                 <Setter Property="Cursor" Value="Hand" />
                                 <Setter Property="Template">
@@ -941,15 +1074,16 @@
                                             <Border x:Name="ItemBorder"
                                                     Background="Transparent"
                                                     BorderThickness="0"
-                                                    Padding="{TemplateBinding Padding}">
-                                                <GridViewRowPresenter />
+                                                    Padding="{TemplateBinding Padding}"
+                                                    SnapsToDevicePixels="True">
+                                                <GridViewRowPresenter VerticalAlignment="Center" />
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#1A202D" />
+                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#18202F" />
                                                 </Trigger>
                                                 <Trigger Property="IsSelected" Value="True">
-                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#17263C" />
+                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#142640" />
                                                     <Setter TargetName="ItemBorder" Property="BorderBrush" Value="#38BDF8" />
                                                     <Setter TargetName="ItemBorder" Property="BorderThickness" Value="3,0,0,0" />
                                                 </Trigger>
@@ -963,7 +1097,7 @@
                         <ListView.View>
                             <GridView>
                                 <!-- Name Column -->
-                                <GridViewColumn Width="260">
+                                <GridViewColumn Width="300">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Click="ColumnHeader_Click" Tag="Name">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -984,7 +1118,7 @@
                                                 <TextBlock Text="{Binding Name}"
                                                            FontWeight="SemiBold"
                                                            FontSize="13"
-                                                           Foreground="#F9FAFB"
+                                                           Foreground="#FFFFFF"
                                                            VerticalAlignment="Center"
                                                            TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
@@ -993,7 +1127,7 @@
                                 </GridViewColumn>
 
                                 <!-- Path Column -->
-                                <GridViewColumn Width="310">
+                                <GridViewColumn Width="380">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Click="ColumnHeader_Click" Tag="Path">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -1007,7 +1141,7 @@
                                         <DataTemplate DataType="{x:Type models:SearchResultItem}">
                                             <TextBlock Text="{Binding Path}"
                                                  FontSize="12"
-                                                 Foreground="#9CA3AF"
+                                                 Foreground="#94A3B8"
                                                  TextTrimming="CharacterEllipsis"
                                                  VerticalAlignment="Center" />
                                         </DataTemplate>
@@ -1015,7 +1149,7 @@
                                 </GridViewColumn>
 
                                 <!-- Size Column -->
-                                <GridViewColumn Width="90">
+                                <GridViewColumn Width="105">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Click="ColumnHeader_Click" Tag="Size">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -1029,16 +1163,16 @@
                                         <DataTemplate DataType="{x:Type models:SearchResultItem}">
                                             <TextBlock Text="{Binding SizeDisplay}"
                                                        FontSize="12"
-                                                       FontFamily="Consolas, Cascadia Code"
+                                                       FontFamily="Cascadia Mono, Consolas, Segoe UI Variable Text"
                                                        HorizontalAlignment="Right"
-                                                       Foreground="#D1D5DB"
+                                                       Foreground="#E2E8F0"
                                                        VerticalAlignment="Center" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
                                 <!-- Ext Column -->
-                                <GridViewColumn Width="60">
+                                <GridViewColumn Width="68">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Content="Ext" />
                                     </GridViewColumn.Header>
@@ -1048,7 +1182,7 @@
                                                     BorderBrush="{Binding BadgeBorder}"
                                                     BorderThickness="1"
                                                     CornerRadius="4"
-                                                    Padding="5,1"
+                                                    Padding="6,1.5"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding ExtensionBadge}"
@@ -1061,7 +1195,7 @@
                                 </GridViewColumn>
 
                                 <!-- Date Modified Column -->
-                                <GridViewColumn Width="140">
+                                <GridViewColumn Width="155">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Click="ColumnHeader_Click" Tag="DateModified">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -1075,14 +1209,15 @@
                                         <DataTemplate DataType="{x:Type models:SearchResultItem}">
                                             <TextBlock Text="{Binding DateModifiedDisplay}"
                                                        FontSize="12"
-                                                       Foreground="#9CA3AF"
+                                                       FontFamily="Cascadia Mono, Consolas, Segoe UI Variable Text"
+                                                       Foreground="#94A3B8"
                                                        VerticalAlignment="Center" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
                                 <!-- Type Column -->
-                                <GridViewColumn Width="100">
+                                <GridViewColumn Width="115">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Content="Type" />
                                     </GridViewColumn.Header>
@@ -1102,9 +1237,11 @@
                     </ListView>
 
                     <!-- View Mode 2: Visual Card Grid (ListBox) with Micro-Animations -->
-                    <ListBox ItemsSource="{Binding GridResults}"
+                    <ListBox x:Name="CardListBox"
+                             ItemsSource="{Binding GridResults}"
                              SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                              SelectionMode="Extended"
+                             SelectionChanged="ResultsListView_SelectionChanged"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              Background="Transparent"
@@ -1112,6 +1249,8 @@
                              Padding="12"
                              MouseDoubleClick="ListView_MouseDoubleClick"
                              KeyDown="ListView_KeyDown"
+                             PreviewMouseLeftButtonDown="ListBox_PreviewMouseLeftButtonDown"
+                             PreviewMouseMove="ListBox_PreviewMouseMove"
                              Visibility="{Binding IsGridView, Converter={StaticResource BoolToVis}}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -1120,6 +1259,7 @@
                                 <Setter Property="Background" Value="Transparent" />
                                 <Setter Property="BorderThickness" Value="0" />
                                 <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListBoxItem">
@@ -1129,19 +1269,13 @@
                                                     BorderThickness="1"
                                                     CornerRadius="10"
                                                     Width="175" Height="140"
-                                                    Padding="10"
-                                                    RenderTransformOrigin="0.5,0.5">
+                                                    Padding="10">
                                                 <ContentPresenter />
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="CardBorder" Property="Background" Value="#1E232E" />
+                                                    <Setter TargetName="CardBorder" Property="Background" Value="#212836" />
                                                     <Setter TargetName="CardBorder" Property="BorderBrush" Value="#38BDF8" />
-                                                    <Setter TargetName="CardBorder" Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <TranslateTransform Y="-3" />
-                                                        </Setter.Value>
-                                                    </Setter>
                                                 </Trigger>
                                                 <Trigger Property="IsSelected" Value="True">
                                                     <Setter TargetName="CardBorder" Property="Background" Value="#1A2536" />
@@ -1401,291 +1535,291 @@
                           ResizeBehavior="PreviousAndNext"
                           Visibility="{Binding IsPreviewPaneVisible, Converter={StaticResource BoolToVis}}" />
 
-            <!-- Inspector / Preview Pane -->
+            <!-- Inspector / Preview Pane (Responsive ScrollViewer for Windowed Mode) -->
             <Border Grid.Column="2"
                     Background="#13151B"
                     BorderBrush="#232833"
                     BorderThickness="1"
                     CornerRadius="10"
-                    Padding="16"
+                    Padding="14,12"
                     ClipToBounds="True"
                     Visibility="{Binding IsPreviewPaneVisible, Converter={StaticResource BoolToVis}}">
-                <Grid>
-                    <!-- When Item Selected -->
-                    <Grid Visibility="{Binding SelectedItem, Converter={StaticResource NullToVis}}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <!-- File Hero Section -->
-                        <Border Grid.Row="0"
-                                Background="#181B22"
-                                BorderBrush="#252A36"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="12"
-                                Margin="0,0,0,12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0"
-                                       Source="{Binding SelectedItem.Icon}"
-                                       Width="44" Height="44"
-                                       Margin="0,0,12,0"
-                                       VerticalAlignment="Center"
-                                       RenderOptions.BitmapScalingMode="HighQuality" />
-
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding SelectedItem.Name}"
-                                               FontSize="14"
-                                               FontWeight="Bold"
-                                               Foreground="#F9FAFB"
-                                               TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{Binding SelectedItem.TypeDisplay}"
-                                               FontSize="11"
-                                               Foreground="#9CA3AF"
-                                               Margin="0,2,0,0" />
-                                </StackPanel>
-
-                                <!-- Quick Copy Name Button -->
-                                <ui:Button Grid.Column="2"
-                                           Icon="{ui:SymbolIcon Copy20}"
-                                           Appearance="Transparent"
-                                           Padding="6,6"
-                                           VerticalAlignment="Center"
-                                           ToolTip="Copy File Name"
-                                           Command="{Binding CopyFileNameCommand}"
-                                           CommandParameter="{Binding SelectedItem}" />
-                            </Grid>
-                        </Border>
-
-                        <!-- Metadata Badges -->
-                        <Border Grid.Row="1"
-                                Background="#181B22"
-                                BorderBrush="#252A36"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="12"
-                                Margin="0,0,0,12">
-                            <StackPanel>
-                                <DockPanel Margin="0,2">
-                                    <TextBlock Text="File Size" Foreground="#6B7280" FontSize="11" />
-                                    <TextBlock Text="{Binding SelectedItem.SizeDetailedDisplay}" Foreground="#E5E7EB" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" />
-                                </DockPanel>
-                                <Separator Background="#232833" Margin="0,5" />
-                                <DockPanel Margin="0,2">
-                                    <TextBlock Text="Modified" Foreground="#6B7280" FontSize="11" />
-                                    <TextBlock Text="{Binding SelectedItem.DateModifiedDisplay}" Foreground="#E5E7EB" FontSize="11" HorizontalAlignment="Right" />
-                                </DockPanel>
-                                <DockPanel Margin="0,2">
-                                    <TextBlock Text="Created" Foreground="#6B7280" FontSize="11" />
-                                    <TextBlock Text="{Binding SelectedItem.DateCreatedDisplay}" Foreground="#E5E7EB" FontSize="11" HorizontalAlignment="Right" />
-                                </DockPanel>
-                                <Separator Background="#232833" Margin="0,5" />
-                                <DockPanel Margin="0,2">
-                                    <TextBlock Text="Location" Foreground="#6B7280" FontSize="11" />
-                                    <TextBlock Text="{Binding SelectedItem.Path}" Foreground="#93C5FD" FontSize="11" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right" MaxWidth="220" ToolTip="{Binding SelectedItem.FullPath}" />
-                                </DockPanel>
-                                <Separator Background="#232833" Margin="0,5" />
-                                <!-- Checksum Section -->
-                                <DockPanel Margin="0,2">
-                                    <TextBlock Text="SHA-256" Foreground="#6B7280" FontSize="11" VerticalAlignment="Center" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <TextBlock Text="{Binding SelectedItem.FileHash}" Foreground="#34D399" FontSize="10" FontFamily="Cascadia Code, Consolas" TextTrimming="CharacterEllipsis" MaxWidth="170" VerticalAlignment="Center"
-                                                   Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringNotEmptyToVis}}" ToolTip="{Binding SelectedItem.FileHash}" />
-                                        <Button Content="Compute" Style="{StaticResource SyntaxChipStyle}" Command="{Binding CalculateChecksumCommand}" CommandParameter="{Binding SelectedItem}"
-                                                Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringEmptyToVis}}" FontSize="10" Padding="6,2" Margin="4,0,0,0" />
-                                    </StackPanel>
-                                </DockPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Live File Preview Section -->
-                        <Border Grid.Row="2"
-                                Background="#181B22"
-                                BorderBrush="#252A36"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="8"
-                                Margin="0,0,0,12"
-                                ClipToBounds="True">
-                            <Grid>
-                                <!-- Image Preview -->
-                                <Image Source="{Binding CurrentPreview.ImageSource}"
-                                       Stretch="Uniform"
-                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                       Visibility="{Binding CurrentPreview.ImageSource, Converter={StaticResource NullToVis}}" />
-
-                                <!-- Text / Code Preview -->
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              HorizontalScrollBarVisibility="Auto"
-                                              Visibility="{Binding CurrentPreview.TextContent, Converter={StaticResource StringNotEmptyToVis}}">
-                                    <TextBox Text="{Binding CurrentPreview.TextContent, Mode=OneWay}"
-                                             FontFamily="Cascadia Code, Consolas"
-                                             FontSize="11"
-                                             Foreground="#93C5FD"
-                                             Background="Transparent"
-                                             BorderThickness="0"
-                                             IsReadOnly="True" />
-                                </ScrollViewer>
-
-                                <!-- Placeholder when no preview available -->
-                                <StackPanel VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
-                                    <StackPanel.Style>
-                                        <Style TargetType="StackPanel">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding CurrentPreview.ImageSource}" Value="{x:Null}" />
-                                                        <Condition Binding="{Binding CurrentPreview.TextContent}" Value="" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </MultiDataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </StackPanel.Style>
-                                    <ui:SymbolIcon Symbol="DocumentLandscape24" FontSize="36" Foreground="#374151" Margin="0,0,0,6" />
-                                    <TextBlock Text="Preview unavailable" FontSize="12" Foreground="#6B7280" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!-- Action Toolbar -->
-                        <WrapPanel Grid.Row="3" HorizontalAlignment="Center">
-                            <ui:Button Icon="{ui:SymbolIcon Open20}"
-                                       Appearance="Primary"
-                                       Content="Open"
-                                       Padding="10,5"
-                                       Margin="2"
-                                       Command="{Binding OpenFileCommand}" />
-
-                            <ui:Button Icon="{ui:SymbolIcon FolderOpen20}"
-                                       Appearance="Secondary"
-                                       Content="Folder"
-                                       Padding="10,5"
-                                       Margin="2"
-                                       Command="{Binding OpenContainingFolderCommand}" />
-
-                            <ui:Button Icon="{ui:SymbolIcon Code20}"
-                                       Appearance="Transparent"
-                                       Padding="8,5"
-                                       Margin="2"
-                                       ToolTip="Open in VS Code"
-                                       Command="{Binding OpenInVSCodeCommand}" />
-
-                            <ui:Button Icon="{ui:SymbolIcon WindowConsole20}"
-                                       Appearance="Transparent"
-                                       Padding="8,5"
-                                       Margin="2"
-                                       ToolTip="Open in Terminal"
-                                       Command="{Binding OpenInTerminalCommand}" />
-
-                            <ui:Button Icon="{ui:SymbolIcon Copy20}"
-                                       Appearance="Transparent"
-                                       Padding="8,5"
-                                       Margin="2"
-                                       ToolTip="Copy Full Path"
-                                       Command="{Binding CopyPathCommand}"
-                                       CommandParameter="{Binding SelectedItem}" />
-
-                            <ui:Button Icon="{ui:SymbolIcon Eye20}"
-                                       Appearance="Transparent"
-                                       Padding="8,5"
-                                       Margin="2"
-                                       ToolTip="Quick Look (Space)"
-                                       Command="{Binding ToggleQuickLookCommand}" />
-                        </WrapPanel>
-                    </Grid>
-
-                    <!-- When No Item Selected -->
-                    <StackPanel VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                Visibility="{Binding SelectedItem, Converter={StaticResource InverseNullToVis}}">
-                        <ui:SymbolIcon Symbol="CursorClick24" FontSize="44" Foreground="#2A303D" Margin="0,0,0,10" />
-                        <TextBlock Text="Select a file to inspect" FontSize="14" FontWeight="SemiBold" Foreground="#6B7280" HorizontalAlignment="Center" />
-                        <TextBlock Text="Shows metadata, image viewer, syntax &amp; hashes" FontSize="11" Foreground="#4B5563" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <!-- Floating Quick Look Modal Overlay (Spacebar) -->
-            <Border Grid.ColumnSpan="3"
-                    Background="#8A000000"
-                    MouseDown="QuickLookOverlay_MouseDown"
-                    Visibility="{Binding IsQuickLookOpen, Converter={StaticResource BoolToVis}}"
-                    Panel.ZIndex="100">
-                <Border Background="#161820"
-                        BorderBrush="#38BDF8"
-                        BorderThickness="1.5"
-                        CornerRadius="14"
-                        Width="840" Height="580"
-                        Padding="22"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <Border.Effect>
-                        <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.75" />
-                    </Border.Effect>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        <!-- When Item Selected -->
+                        <Grid Visibility="{Binding SelectedItem, Converter={StaticResource NullToVis}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <!-- Header -->
-                        <DockPanel Grid.Row="0" Margin="0,0,0,14">
-                            <ui:Button DockPanel.Dock="Right"
-                                       Icon="{ui:SymbolIcon Dismiss20}"
-                                       Appearance="Transparent"
-                                       Command="{Binding CloseQuickLookCommand}" />
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding SelectedItem.Icon}" Width="24" Height="24" Margin="0,0,10,0" />
-                                <TextBlock Text="{Binding SelectedItem.Name}" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </DockPanel>
-
-                        <!-- Content Preview -->
-                        <Grid Grid.Row="1">
-                            <!-- Image -->
-                            <Image Source="{Binding CurrentPreview.ImageSource}"
-                                   Stretch="Uniform"
-                                   RenderOptions.BitmapScalingMode="HighQuality"
-                                   Visibility="{Binding CurrentPreview.ImageSource, Converter={StaticResource NullToVis}}" />
-
-                            <!-- Code / Text -->
-                            <Border Background="#0C0E12"
-                                    BorderBrush="#232833"
+                            <!-- File Hero Section -->
+                            <Border Grid.Row="0"
+                                    Background="#181B22"
+                                    BorderBrush="#252A36"
                                     BorderThickness="1"
-                                    CornerRadius="6"
-                                    Padding="10"
-                                    Visibility="{Binding CurrentPreview.TextContent, Converter={StaticResource StringNotEmptyToVis}}">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                    <TextBox Text="{Binding CurrentPreview.TextContent, Mode=OneWay}"
-                                             FontFamily="Cascadia Code, Consolas"
-                                             FontSize="12"
-                                             Foreground="#93C5FD"
-                                             Background="Transparent"
-                                             BorderThickness="0"
-                                             IsReadOnly="True" />
-                                </ScrollViewer>
+                                    CornerRadius="8"
+                                    Padding="12"
+                                    Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0"
+                                           Source="{Binding SelectedItem.Icon}"
+                                           Width="44" Height="44"
+                                           Margin="0,0,12,0"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="HighQuality" />
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding SelectedItem.Name}"
+                                                   FontSize="14"
+                                                   FontWeight="Bold"
+                                                   Foreground="#F9FAFB"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding SelectedItem.TypeDisplay}"
+                                                   FontSize="11"
+                                                   Foreground="#9CA3AF"
+                                                   Margin="0,2,0,0" />
+                                    </StackPanel>
+
+                                    <!-- Quick Copy Name Button -->
+                                    <ui:Button Grid.Column="2"
+                                               Icon="{ui:SymbolIcon Copy20}"
+                                               Appearance="Transparent"
+                                               Padding="6,6"
+                                               VerticalAlignment="Center"
+                                               ToolTip="Copy File Name"
+                                               Command="{Binding CopyFileNameCommand}"
+                                               CommandParameter="{Binding SelectedItem}" />
+                                </Grid>
                             </Border>
+
+                            <!-- Metadata Badges -->
+                            <Border Grid.Row="1"
+                                    Background="#181B22"
+                                    BorderBrush="#252A36"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="12"
+                                    Margin="0,0,0,10">
+                                <StackPanel>
+                                    <DockPanel Margin="0,2">
+                                        <TextBlock Text="File Size" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding SelectedItem.SizeDetailedDisplay}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" />
+                                    </DockPanel>
+                                    <Separator Background="#232833" Margin="0,5" />
+                                    <DockPanel Margin="0,2">
+                                        <TextBlock Text="Modified" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding SelectedItem.DateModifiedDisplay}" Foreground="#E2E8F0" FontSize="11" HorizontalAlignment="Right" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,2">
+                                        <TextBlock Text="Created" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding SelectedItem.DateCreatedDisplay}" Foreground="#E2E8F0" FontSize="11" HorizontalAlignment="Right" />
+                                    </DockPanel>
+                                    <Separator Background="#232833" Margin="0,5" />
+                                    <DockPanel Margin="0,2">
+                                        <TextBlock Text="Attributes" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding SelectedItem.AttributesDisplay}" Foreground="#38BDF8" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                    </DockPanel>
+                                    <Separator Background="#232833" Margin="0,5" />
+                                    <!-- Full Location Path with Copy Button -->
+                                    <Grid Margin="0,2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <DockPanel Grid.Row="0">
+                                            <TextBlock Text="Location" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                            <ui:Button DockPanel.Dock="Right" Icon="{ui:SymbolIcon Copy16}" Appearance="Transparent" Padding="4,2" ToolTip="Copy Directory Path"
+                                                       Command="{Binding CopyDirectoryPathCommand}" CommandParameter="{Binding SelectedItem}" HorizontalAlignment="Right" />
+                                        </DockPanel>
+                                        <TextBlock Grid.Row="1" Text="{Binding SelectedItem.Path}" Foreground="#60A5FA" FontSize="11" TextWrapping="Wrap" Margin="0,3,0,0" ToolTip="{Binding SelectedItem.FullPath}" />
+                                    </Grid>
+                                    <Separator Background="#232833" Margin="0,5" />
+                                    <!-- Checksum Section: Fully Visible with Monospace Box & 1-Click Copy -->
+                                    <Grid Margin="0,2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <DockPanel Grid.Row="0">
+                                            <TextBlock Text="SHA-256" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                            <Button DockPanel.Dock="Right" Content="Compute" Style="{StaticResource SyntaxChipStyle}" Command="{Binding CalculateChecksumCommand}" CommandParameter="{Binding SelectedItem}"
+                                                    Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringEmptyToVis}}" FontSize="10" Padding="6,2" Margin="4,0,0,0" HorizontalAlignment="Right" />
+                                            <ui:Button DockPanel.Dock="Right" Icon="{ui:SymbolIcon Copy16}" Appearance="Transparent" Padding="4,2" ToolTip="Copy SHA-256 Checksum"
+                                                       Command="{Binding CopySha256Command}" CommandParameter="{Binding SelectedItem}"
+                                                       Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringNotEmptyToVis}}" HorizontalAlignment="Right" />
+                                        </DockPanel>
+                                        <TextBox Grid.Row="1" Text="{Binding SelectedItem.FileHash, Mode=OneWay}"
+                                                 Visibility="{Binding SelectedItem.FileHash, Converter={StaticResource StringNotEmptyToVis}}"
+                                                 IsReadOnly="True" Background="#0C0E14" BorderBrush="#1F2633" BorderThickness="1"
+                                                 Foreground="#34D399" FontSize="10" FontFamily="Cascadia Code, Consolas"
+                                                 Padding="6,3" Margin="0,3,0,2" TextWrapping="Wrap" />
+                                    </Grid>
+                                    <Separator Background="#232833" Margin="0,4" />
+                                    <Grid Margin="0,2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <DockPanel Grid.Row="0">
+                                            <TextBlock Text="MD5" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                            <Button DockPanel.Dock="Right" Content="Compute" Style="{StaticResource SyntaxChipStyle}" Command="{Binding CalculateMd5Command}" CommandParameter="{Binding SelectedItem}"
+                                                    Visibility="{Binding SelectedItem.Md5Hash, Converter={StaticResource StringEmptyToVis}}" FontSize="10" Padding="6,2" Margin="4,0,0,0" HorizontalAlignment="Right" />
+                                            <ui:Button DockPanel.Dock="Right" Icon="{ui:SymbolIcon Copy16}" Appearance="Transparent" Padding="4,2" ToolTip="Copy MD5 Checksum"
+                                                       Command="{Binding CopyMd5Command}" CommandParameter="{Binding SelectedItem}"
+                                                       Visibility="{Binding SelectedItem.Md5Hash, Converter={StaticResource StringNotEmptyToVis}}" HorizontalAlignment="Right" />
+                                        </DockPanel>
+                                        <TextBox Grid.Row="1" Text="{Binding SelectedItem.Md5Hash, Mode=OneWay}"
+                                                 Visibility="{Binding SelectedItem.Md5Hash, Converter={StaticResource StringNotEmptyToVis}}"
+                                                 IsReadOnly="True" Background="#0C0E14" BorderBrush="#1F2633" BorderThickness="1"
+                                                 Foreground="#38BDF8" FontSize="10" FontFamily="Cascadia Code, Consolas"
+                                                 Padding="6,3" Margin="0,3,0,2" TextWrapping="Wrap" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Live File Preview Section -->
+                            <Border Grid.Row="2"
+                                    Background="#181B22"
+                                    BorderBrush="#252A36"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="8"
+                                    Margin="0,0,0,10"
+                                    Height="210"
+                                    ClipToBounds="True">
+                                <Grid>
+                                    <!-- Image Preview -->
+                                    <Image Source="{Binding CurrentPreview.ImageSource}"
+                                           Stretch="Uniform"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           Visibility="{Binding CurrentPreview.ImageSource, Converter={StaticResource NullToVis}}" />
+
+                                    <!-- Text / Code Preview -->
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                                  HorizontalScrollBarVisibility="Auto"
+                                                  Visibility="{Binding CurrentPreview.TextContent, Converter={StaticResource StringNotEmptyToVis}}">
+                                        <TextBox Text="{Binding CurrentPreview.TextContent, Mode=OneWay}"
+                                                 FontFamily="Cascadia Code, Consolas"
+                                                 FontSize="11"
+                                                 Foreground="#93C5FD"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 IsReadOnly="True" />
+                                    </ScrollViewer>
+
+                                    <!-- Placeholder when no preview available -->
+                                    <StackPanel VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding CurrentPreview.ImageSource}" Value="{x:Null}" />
+                                                            <Condition Binding="{Binding CurrentPreview.TextContent}" Value="" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <ui:SymbolIcon Symbol="DocumentLandscape24" FontSize="36" Foreground="#374151" Margin="0,0,0,6" />
+                                        <TextBlock Text="Preview unavailable" FontSize="12" Foreground="#6B7280" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Action Toolbar -->
+                            <WrapPanel Grid.Row="3" HorizontalAlignment="Center">
+                                <ui:Button Icon="{ui:SymbolIcon Open20}"
+                                           Appearance="Primary"
+                                           Content="Open"
+                                           Padding="10,5"
+                                           Margin="2"
+                                           Command="{Binding OpenFileCommand}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon FolderOpen20}"
+                                           Appearance="Secondary"
+                                           Content="Folder"
+                                           Padding="10,5"
+                                           Margin="2"
+                                           Command="{Binding OpenContainingFolderCommand}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon Rename20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Rename (F2)"
+                                           Command="{Binding StartRenameCommand}"
+                                           CommandParameter="{Binding SelectedItem}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon Link20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Copy as file:// URL"
+                                           Command="{Binding CopyFileAsUrlCommand}"
+                                           CommandParameter="{Binding SelectedItem}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon FolderArrowRight20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Copy Directory Path"
+                                           Command="{Binding CopyDirectoryPathCommand}"
+                                           CommandParameter="{Binding SelectedItem}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon Code20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Open in VS Code"
+                                           Command="{Binding OpenInVSCodeCommand}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon WindowConsole20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Open in Terminal"
+                                           Command="{Binding OpenInTerminalCommand}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon Copy20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Copy Full Path"
+                                           Command="{Binding CopyPathCommand}"
+                                           CommandParameter="{Binding SelectedItem}" />
+
+                                <ui:Button Icon="{ui:SymbolIcon Eye20}"
+                                           Appearance="Transparent"
+                                           Padding="8,5"
+                                           Margin="2"
+                                           ToolTip="Quick Look (Space)"
+                                           Command="{Binding ToggleQuickLookCommand}" />
+                            </WrapPanel>
                         </Grid>
 
-                        <!-- Footer -->
-                        <DockPanel Grid.Row="2" Margin="0,14,0,0">
-                            <TextBlock Text="{Binding SelectedItem.FullPath}" Foreground="#9CA3AF" FontSize="12" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                        </DockPanel>
+                        <!-- When No Item Selected -->
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Visibility="{Binding SelectedItem, Converter={StaticResource InverseNullToVis}}">
+                            <ui:SymbolIcon Symbol="CursorClick24" FontSize="44" Foreground="#2A303D" Margin="0,0,0,10" />
+                            <TextBlock Text="Select a file to inspect" FontSize="14" FontWeight="SemiBold" Foreground="#6B7280" HorizontalAlignment="Center" />
+                            <TextBlock Text="Shows metadata, image viewer, syntax &amp; hashes" FontSize="11" Foreground="#4B5563" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                        </StackPanel>
                     </Grid>
-                </Border>
+                </ScrollViewer>
             </Border>
         </Grid>
 
@@ -1783,21 +1917,348 @@
                                VerticalAlignment="Center" />
                 </DockPanel>
 
-                <!-- Right: Keyboard Shortcuts Hint Badges -->
+                <!-- Right: Keyboard Shortcuts Hint Badges (Compact for Windowed Mode) -->
                 <Border Grid.Column="1"
                         Background="#121620"
                         BorderBrush="#1E2433"
                         BorderThickness="1"
                         CornerRadius="6"
-                        Padding="10,4"
+                        Padding="8,3"
                         Margin="12,0,0,0"
                         VerticalAlignment="Center">
-                    <TextBlock Text="Space: Quick Look • Enter: Open • Shift+Enter: Folder • Ctrl+C: Copy • Ctrl+P: Preview"
+                    <TextBlock Text="Space: Quick Look • Enter: Open • Shift+Enter: Folder • Ctrl+P: Preview"
                                FontSize="11"
                                Foreground="#94A3B8"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="450"
                                VerticalAlignment="Center" />
                 </Border>
             </Grid>
+        </Border>
+
+        <!-- Floating Quick Look Modal Overlay (Spacebar, Responsive Windowed Scale) -->
+        <Border Grid.Row="0" Grid.RowSpan="4"
+                Background="#99000000"
+                MouseDown="QuickLookOverlay_MouseDown"
+                Visibility="{Binding IsQuickLookOpen, Converter={StaticResource BoolToVis}}"
+                Panel.ZIndex="150">
+            <Border Background="#161820"
+                    BorderBrush="#38BDF8"
+                    BorderThickness="1.5"
+                    CornerRadius="14"
+                    MaxWidth="880" MaxHeight="600"
+                    Margin="24"
+                    Padding="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.75" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,12">
+                        <ui:Button DockPanel.Dock="Right"
+                                   Icon="{ui:SymbolIcon Dismiss20}"
+                                   Appearance="Transparent"
+                                   Command="{Binding CloseQuickLookCommand}" />
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{Binding SelectedItem.Icon}" Width="24" Height="24" Margin="0,0,10,0" />
+                            <TextBlock Text="{Binding SelectedItem.Name}" FontSize="15" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <!-- Content Preview -->
+                    <Grid Grid.Row="1">
+                        <!-- Image -->
+                        <Image Source="{Binding CurrentPreview.ImageSource}"
+                               Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               Visibility="{Binding CurrentPreview.ImageSource, Converter={StaticResource NullToVis}}" />
+
+                        <!-- Code / Text / Folder Inspection -->
+                        <Border Background="#0C0E12"
+                                BorderBrush="#232833"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="10"
+                                Visibility="{Binding CurrentPreview.TextContent, Converter={StaticResource StringNotEmptyToVis}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Background="#182030" BorderBrush="#253550" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="0,0,0,8"
+                                        Visibility="{Binding CurrentPreview.HeaderInfo, Converter={StaticResource StringNotEmptyToVis}}">
+                                    <TextBlock Text="{Binding CurrentPreview.HeaderInfo}" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8" />
+                                </Border>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <TextBox Text="{Binding CurrentPreview.TextContent, Mode=OneWay}"
+                                             FontFamily="Cascadia Code, Consolas"
+                                             FontSize="12"
+                                             Foreground="#93C5FD"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             IsReadOnly="True" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- Audio File Card -->
+                        <Border Background="#121620" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="10" Padding="24"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Visibility="{Binding CurrentPreview.AudioFilePath, Converter={StaticResource StringNotEmptyToVis}}">
+                            <StackPanel HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="MusicNote224" FontSize="56" Foreground="#38BDF8" Margin="0,0,0,16" HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding SelectedItem.Name}" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                                <TextBlock Text="{Binding CurrentPreview.HeaderInfo}" FontSize="12" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                                <Border Background="#1E293B" CornerRadius="6" Padding="12,6" HorizontalAlignment="Center">
+                                    <TextBlock Text="🎵 Audio File Ready • Press Enter to Play in Default Media Player" FontSize="11" Foreground="#38BDF8" FontWeight="SemiBold" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Hex Dump Viewer -->
+                        <Border Background="#0B0D13" BorderBrush="#2A233A" BorderThickness="1" CornerRadius="6" Padding="10"
+                                Visibility="{Binding CurrentPreview.HexContent, Converter={StaticResource StringNotEmptyToVis}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Background="#1D172B" BorderBrush="#362952" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding CurrentPreview.HeaderInfo}" FontSize="11" FontWeight="SemiBold" Foreground="#A78BFA" />
+                                </Border>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <TextBox Text="{Binding CurrentPreview.HexContent, Mode=OneWay}"
+                                             FontFamily="Cascadia Code, Consolas"
+                                             FontSize="11.5"
+                                             Foreground="#D8B4FE"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             IsReadOnly="True" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- Footer -->
+                    <DockPanel Grid.Row="2" Margin="0,12,0,0">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <ui:Button Icon="{ui:SymbolIcon Open20}"
+                                       Appearance="Primary"
+                                       Content="Open"
+                                       Padding="12,4"
+                                       Margin="4,0,0,0"
+                                       Command="{Binding OpenFileCommand}" />
+                            <ui:Button Icon="{ui:SymbolIcon FolderOpen20}"
+                                       Appearance="Secondary"
+                                       Content="Folder"
+                                       Padding="12,4"
+                                       Margin="4,0,0,0"
+                                       Command="{Binding OpenContainingFolderCommand}" />
+                            <ui:Button Icon="{ui:SymbolIcon Copy20}"
+                                       Appearance="Transparent"
+                                       ToolTip="Copy Path"
+                                       Padding="8,4"
+                                       Margin="4,0,0,0"
+                                       Command="{Binding CopyPathCommand}"
+                                       CommandParameter="{Binding SelectedItem}" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding SelectedItem.FullPath}" Foreground="#9CA3AF" FontSize="12" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </Border>
+
+        <!-- Floating In-Place Rename Dialog (F2) -->
+        <Border Grid.Row="0" Grid.RowSpan="4"
+                Background="#99000000"
+                MouseDown="RenameOverlay_MouseDown"
+                Visibility="{Binding IsRenameDialogOpen, Converter={StaticResource BoolToVis}}"
+                Panel.ZIndex="200">
+            <Border Background="#161820"
+                    BorderBrush="#38BDF8"
+                    BorderThickness="1.5"
+                    CornerRadius="14"
+                    Width="480"
+                    Padding="24"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.75" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Title & Close -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,14">
+                        <Button DockPanel.Dock="Right"
+                                Command="{Binding CancelRenameCommand}"
+                                Background="Transparent" BorderThickness="0" Padding="4,2" Cursor="Hand">
+                            <ui:SymbolIcon Symbol="Dismiss16" Foreground="#9CA3AF" />
+                        </Button>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Rename20" FontSize="18" Foreground="#38BDF8" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Rename File or Folder" FontSize="15" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <!-- Current item info -->
+                    <TextBlock Grid.Row="1" Text="{Binding RenameItem.FullPath}"
+                               FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" Margin="0,0,0,12" />
+
+                    <!-- Text Input -->
+                    <TextBox Grid.Row="2"
+                             Text="{Binding NewItemName, UpdateSourceTrigger=PropertyChanged}"
+                             FontSize="14"
+                             FontFamily="Segoe UI Variable Text, Segoe UI"
+                             Background="#0D1017"
+                             Foreground="#FFFFFF"
+                             BorderBrush="#2A3242"
+                             BorderThickness="1.2"
+                             CaretBrush="#38BDF8"
+                             Padding="10,8"
+                             Margin="0,0,0,8">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding ConfirmRenameCommand}" />
+                            <KeyBinding Key="Esc" Command="{Binding CancelRenameCommand}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+
+                    <!-- Error message if any -->
+                    <TextBlock Grid.Row="3"
+                               Text="{Binding RenameErrorMessage}"
+                               FontSize="11.5"
+                               Foreground="#EF4444"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"
+                               Visibility="{Binding RenameErrorMessage, Converter={StaticResource StringNotEmptyToVis}}" />
+
+                    <!-- Buttons -->
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+                        <Button Content="Cancel"
+                                Command="{Binding CancelRenameCommand}"
+                                Background="#1E2430" Foreground="#CBD5E1" BorderBrush="#2D3748" BorderThickness="1"
+                                Padding="16,7" Margin="0,0,8,0" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="6" /></Style>
+                            </Button.Resources>
+                        </Button>
+                        <Button Content="Rename"
+                                Command="{Binding ConfirmRenameCommand}"
+                                Background="#0284C7" Foreground="#FFFFFF" BorderThickness="0" FontWeight="SemiBold"
+                                Padding="18,7" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="6" /></Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Border>
+
+        <!-- Floating Add Bookmark Dialog (Ctrl+D) -->
+        <Border Grid.Row="0" Grid.RowSpan="4"
+                Background="#99000000"
+                MouseDown="AddBookmarkOverlay_MouseDown"
+                Visibility="{Binding IsAddBookmarkDialogOpen, Converter={StaticResource BoolToVis}}"
+                Panel.ZIndex="200">
+            <Border Background="#161820"
+                    BorderBrush="#F59E0B"
+                    BorderThickness="1.5"
+                    CornerRadius="14"
+                    Width="480"
+                    Padding="24"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.75" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Title & Close -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,14">
+                        <Button DockPanel.Dock="Right"
+                                Command="{Binding CancelAddBookmarkCommand}"
+                                Background="Transparent" BorderThickness="0" Padding="4,2" Cursor="Hand">
+                            <ui:SymbolIcon Symbol="Dismiss16" Foreground="#9CA3AF" />
+                        </Button>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Bookmark20" FontSize="18" Foreground="#F59E0B" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Bookmark Current Search" FontSize="15" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <TextBlock Grid.Row="1" Text="Save this search query to quickly run anytime with one click:"
+                               FontSize="12" Foreground="#94A3B8" Margin="0,0,0,10" />
+
+                    <!-- Title Text Input -->
+                    <StackPanel Grid.Row="2" Margin="0,0,0,12">
+                        <TextBlock Text="Bookmark Label:" FontSize="11" FontWeight="SemiBold" Foreground="#CBD5E1" Margin="0,0,0,5" />
+                        <TextBox Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
+                                 FontSize="14"
+                                 FontFamily="Segoe UI Variable Text, Segoe UI"
+                                 Background="#0D1017"
+                                 Foreground="#FFFFFF"
+                                 BorderBrush="#2A3242"
+                                 BorderThickness="1.2"
+                                 CaretBrush="#F59E0B"
+                                 Padding="10,8">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding ConfirmAddBookmarkCommand}" />
+                                <KeyBinding Key="Esc" Command="{Binding CancelAddBookmarkCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                    </StackPanel>
+
+                    <!-- Query Preview Badge -->
+                    <Border Grid.Row="3" Background="#11151F" BorderBrush="#232C3E" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,16">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Query:" FontSize="11" FontWeight="Bold" Foreground="#64748B" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding SearchText}" FontSize="12" FontFamily="Cascadia Code, Consolas" Foreground="#38BDF8" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Buttons -->
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Cancel"
+                                Command="{Binding CancelAddBookmarkCommand}"
+                                Background="#1E2430" Foreground="#CBD5E1" BorderBrush="#2D3748" BorderThickness="1"
+                                Padding="16,7" Margin="0,0,8,0" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="6" /></Style>
+                            </Button.Resources>
+                        </Button>
+                        <Button Content="Save Bookmark"
+                                Command="{Binding ConfirmAddBookmarkCommand}"
+                                Background="#D97706" Foreground="#FFFFFF" BorderThickness="0" FontWeight="SemiBold"
+                                Padding="18,7" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="6" /></Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
         </Border>
     </Grid>
 </ui:FluentWindow>

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -11,6 +12,9 @@ namespace EverythingModern.Services
 {
     public static class EverythingDaemonManager
     {
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr FindWindow(string lpClassName, string? lpWindowName);
+
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
 
@@ -115,6 +119,58 @@ namespace EverythingModern.Services
             return false;
         }
 
+        public static bool IsIpcWindowPresent()
+        {
+            try
+            {
+                return FindWindow("EVERYTHING_TASKBAR_NOTIFICATION", null) != IntPtr.Zero;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static int GetUserSessionProcessCount()
+        {
+            try
+            {
+                int currentSessionId = Process.GetCurrentProcess().SessionId;
+                return Process.GetProcessesByName("Everything")
+                    .Count(p => p.SessionId == currentSessionId);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public static void CleanupDuplicateInstances()
+        {
+            try
+            {
+                int currentSessionId = Process.GetCurrentProcess().SessionId;
+                var procs = Process.GetProcessesByName("Everything")
+                    .Where(p => p.SessionId == currentSessionId)
+                    .OrderByDescending(p => p.WorkingSet64)
+                    .ToList();
+
+                // If more than 1 user-mode client process exists, terminate redundant/hung duplicates
+                if (procs.Count > 1)
+                {
+                    for (int i = 1; i < procs.Count; i++)
+                    {
+                        try
+                        {
+                            procs[i].Kill();
+                        }
+                        catch { }
+                    }
+                }
+            }
+            catch { }
+        }
+
         public static string? FindEverythingExecutable()
         {
             // 1. Check standard paths
@@ -171,9 +227,14 @@ namespace EverythingModern.Services
         {
             try
             {
+                if (EverythingInterop.Everything_IsDBLoaded())
+                {
+                    return true;
+                }
+
                 EverythingInterop.Everything_Reset();
                 EverythingInterop.Everything_SetMax(1);
-                EverythingInterop.Everything_SetSearchW(" ");
+                EverythingInterop.Everything_SetSearchW(string.Empty);
                 bool queryRes = EverythingInterop.Everything_QueryW(true);
                 uint err = EverythingInterop.Everything_GetLastError();
                 return queryRes || err == 0;
@@ -186,6 +247,13 @@ namespace EverythingModern.Services
 
         public static bool LaunchEverythingClient()
         {
+            // If already running in current user session, clean up duplicates and avoid spawning another
+            if (IsEverythingProcessRunningInSession())
+            {
+                CleanupDuplicateInstances();
+                return true;
+            }
+
             string? exePath = FindEverythingExecutable();
             if (string.IsNullOrEmpty(exePath))
             {
@@ -242,6 +310,7 @@ namespace EverythingModern.Services
                 {
                     try
                     {
+                        // Only kill user-session desktop instances, never the Session 0 service
                         if (p.SessionId == currentSessionId)
                         {
                             p.Kill();
@@ -249,7 +318,7 @@ namespace EverythingModern.Services
                     }
                     catch { }
                 }
-                await Task.Delay(500);
+                await Task.Delay(600);
                 return LaunchEverythingClient();
             }
             catch
@@ -281,6 +350,9 @@ namespace EverythingModern.Services
 
         public static async Task<bool> EnsureDaemonRunningAsync(int timeoutMs = 12000, Action<string>? progressCallback = null)
         {
+            // Automatically clean up any duplicate or orphaned user instances first
+            CleanupDuplicateInstances();
+
             progressCallback?.Invoke("Checking Everything Engine status...");
             if (IsIpcResponding())
             {
@@ -297,20 +369,24 @@ namespace EverythingModern.Services
 
             if (!IsEverythingProcessRunningInSession())
             {
-                progressCallback?.Invoke("Starting Voidtools Everything service in background...");
+                progressCallback?.Invoke("Starting Everything background daemon...");
                 LaunchEverythingClient();
-                await Task.Delay(400);
+                await Task.Delay(400).ConfigureAwait(false);
+            }
+            else if (IsIpcWindowPresent())
+            {
+                progressCallback?.Invoke("Everything file database is loading into memory...");
             }
             else
             {
-                progressCallback?.Invoke("Waiting for Everything database to load into memory...");
+                progressCallback?.Invoke("Waiting for Everything daemon to initialize...");
             }
 
             var sw = Stopwatch.StartNew();
             int lastSec = -1;
             while (sw.ElapsedMilliseconds < timeoutMs)
             {
-                await Task.Delay(200);
+                await Task.Delay(200).ConfigureAwait(false);
                 if (IsIpcResponding())
                 {
                     progressCallback?.Invoke("Connected to Everything Engine!");
@@ -328,7 +404,14 @@ namespace EverythingModern.Services
                 if (currentSec != lastSec)
                 {
                     lastSec = currentSec;
-                    progressCallback?.Invoke($"Loading Everything file database... ({currentSec}s)");
+                    if (IsIpcWindowPresent())
+                    {
+                        progressCallback?.Invoke($"Loading Everything file database... ({currentSec}s)");
+                    }
+                    else
+                    {
+                        progressCallback?.Invoke($"Initializing Everything daemon... ({currentSec}s)");
+                    }
                 }
             }
 

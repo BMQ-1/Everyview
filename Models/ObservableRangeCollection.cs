@@ -8,7 +8,7 @@ namespace EverythingModern.Models
 {
     /// <summary>
     /// High-performance ObservableCollection supporting bulk replacement with a single Reset notification.
-    /// Prevents thousands of individual collection changes from freezing the WPF UI during massive searches.
+    /// Uses direct List&lt;T&gt; AddRange to prevent UI freezes during massive searches.
     /// </summary>
     public class ObservableRangeCollection<T> : ObservableCollection<T>
     {
@@ -22,10 +22,18 @@ namespace EverythingModern.Models
 
             CheckReentrancy();
 
-            Items.Clear();
-            foreach (var item in collection)
+            if (Items is List<T> list)
             {
-                Items.Add(item);
+                list.Clear();
+                list.AddRange(collection);
+            }
+            else
+            {
+                Items.Clear();
+                foreach (var item in collection)
+                {
+                    Items.Add(item);
+                }
             }
 
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
